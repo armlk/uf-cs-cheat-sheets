@@ -1,0 +1,348 @@
+\documentclass{article}
+\usepackage[letterpaper, margin=0.2in]{geometry}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\setlength{\columnsep}{1cm}
+\setlength{\columnseprule}{1pt}
+
+\newcommand{\logicLaw}[3]{
+    \noindent\parbox{\linewidth}{
+        #1\hfill #3\\
+        #2
+        \par
+        \vspace{.5\baselineskip}
+        \hrule
+        \vspace{.5\baselineskip}
+    }
+}
+
+\newcommand{\inferenceRule}[5]{
+    \noindent\parbox{\linewidth}{
+        #1\hfill#4\hfill#5\\
+        #2\\
+        \rule[5pt]{1.5cm}{1pt}
+        \vspace{-.6\baselineskip}
+
+        \noindent$\therefore$ #3
+        \par
+        \vspace{.5\baselineskip}
+        \hrule
+        \vspace{.5\baselineskip}
+    }
+}
+
+\newcommand{\quantifierStatement}[4]{
+    \noindent\parbox{\linewidth}{
+        #1\hfill#3\hfill#4\\
+        #2
+        \par
+        \vspace{.5\baselineskip}
+        \hrule
+        \vspace{.5\baselineskip}
+    }
+}
+
+\newcommand{\twoPartStatement}[2]{
+    \noindent\parbox{\linewidth}{
+        #1\hfill#2
+        \par
+        \vspace{.5\baselineskip}
+        \hrule
+        \vspace{.5\baselineskip}
+    }
+}
+
+\newcommand{\twoFields}[2]{
+    \noindent
+    \textbf{#1}\hfill\textbf{#2} \\
+    \par
+}
+
+\newcommand{\threeFields}[3]{
+    \noindent
+    \textbf{#1}\hfill\textbf{#2}\hfill\textbf{#3}\\
+    \par
+}
+
+\newcommand{\sectionTitle}[1]{
+    \begin{center}
+        \large #1
+    \end{center}
+}
+
+\begin{document}
+
+\sectionTitle{logic laws (logical equivalences)}
+\begin{multicols}{2}
+    \raggedcolumns
+    \twoFields{equivalence}{name}
+    \logicLaw
+        {$p\land T\equiv p$}
+        {$p\lor F\equiv p$}
+        {identity laws}
+    \logicLaw
+        {$p\lor T\equiv T$}
+        {$p\land F\equiv F$}
+        {domination laws}
+    \logicLaw
+        {$p\lor p\equiv p$}
+        {$p\land p\equiv p$}
+        {idempotent laws}
+    \logicLaw
+        {$\neg(\neg p)\equiv p$}
+        {}
+        {double negation law}
+    \logicLaw
+        {$p\lor q\equiv q\lor p$}
+        {$p\land q\equiv q\land p$}
+        {commutative laws}
+    \logicLaw
+        {$(p\lor q)\lor r\equiv p\lor (q\lor r)$}
+        {$(p\land q)\land r\equiv p\land (q\land r)$}
+        {associative laws}
+    \twoFields{equivalence}{name}
+    \logicLaw
+        {$p\lor (q\land r)\equiv (p\lor q)\land (p\lor r)$}
+        {$p\land (q\lor r)\equiv (p\land q)\lor (p\land r)$}
+        {distributive laws}
+    \logicLaw
+        {$\neg(p\land q)\equiv\neg p\lor\neg q$}
+        {$\neg(p\lor q)\equiv\neg p\land\neg q$}
+        {De Morgan's laws}
+    \logicLaw
+        {$p\lor(p\land q)\equiv p$}
+        {$p\land(p\lor q)\equiv p$}
+        {absorption}
+    \logicLaw
+        {$p\lor\neg p\equiv T$}
+        {}
+        {tautology}
+    \logicLaw
+        {$p\land\neg p\equiv F$}
+        {}
+        {contradiction}
+    \logicLaw
+        {$(p\rightarrow q)\equiv(\neg p\lor q)$}
+        {}
+        {implication equivalence}
+\end{multicols}
+\vspace{-1.5\baselineskip}
+
+\sectionTitle{rules of inference}
+\begin{multicols}{2}
+    \raggedcolumns
+    \threeFields{rule}{tautology}{name}
+    \inferenceRule
+        {$p$}
+        {$p\rightarrow q$}
+        {$q$}
+        {$[p\land(p\rightarrow q)]\rightarrow q$}
+        {modus ponens}
+    \inferenceRule
+        {$\neg q$}
+        {$p\rightarrow q$}
+        {$\neg p$}
+        {$[\neg q\land(p\rightarrow q)]\rightarrow \neg p$}
+        {modus tollens}
+    \inferenceRule
+        {$p\rightarrow q$}
+        {$q\rightarrow r$}
+        {$p\rightarrow r$}
+        {$[(p\rightarrow q)\land(q\rightarrow r)]\rightarrow(p\rightarrow r)$}
+        {hypothetical syllogism}
+    \inferenceRule
+        {$p\lor q$}
+        {$\neg p$}
+        {$q$}
+        {$[(p\lor q)\land\neg p]\rightarrow q$}
+        {disjunctive syllogism}
+    \inferenceRule
+        {}
+        {$p$}
+        {$p\lor q$}
+        {$p\rightarrow(p\lor q)$}
+        {addition}
+    \inferenceRule
+        {}
+        {$p\land q$}
+        {$p$}
+        {$(p\land q)\rightarrow p$}
+        {simplification}
+    \threeFields{rule}{tautology}{name}
+    \inferenceRule
+        {$p$}
+        {$q$}
+        {$p\land q$}
+        {$[(p)\land(q)]\rightarrow(p\land q)$}
+        {conjunction}
+    \inferenceRule
+        {$p\lor q$}
+        {$\neg p\lor r$}
+        {$q\lor r$}
+        {$[(p\lor q)\land(\neg p\lor r)]\rightarrow(q\lor r)$}
+        {resolution}
+    \inferenceRule
+        {}
+        {$\forall xP(x)$}
+        {$P(c)$}
+        {}
+        {universal instantiation}
+    \inferenceRule
+        {}
+        {$P(c)$ for an arbitrary $c$}
+        {$\forall xP(x)$}
+        {}
+        {universal generalization}
+    \inferenceRule
+        {}
+        {$\exists xP(x)$}
+        {$P(c)$ for some $c$}
+        {}
+        {existential instantiation}
+    \inferenceRule
+        {}
+        {$P(c)$ for some $c$}
+        {$\exists xP(x)$}
+        {}
+        {existential generalization}
+\end{multicols}
+\vspace{-1.5\baselineskip}
+
+\sectionTitle{fallacies}
+\begin{multicols}{2}
+    \raggedcolumns
+    \threeFields{rule}{contingency}{name}
+    \inferenceRule
+        {$p\rightarrow q$}
+        {$q$}
+        {$p$}
+        {$[(p\rightarrow q)\land q]\rightarrow p$}
+        {affirming the conclusion}
+    \inferenceRule
+        {$p\rightarrow q$}
+        {$\neg p$}
+        {$\neg q$}
+        {$[(p\rightarrow q)\land\neg p]\rightarrow\neg q$}
+        {denying the hypothesis}
+    \threeFields{rule}{contingency}{name}
+    \inferenceRule
+        {}
+        {$p$}
+        {$p$}
+        {$p\rightarrow p$}
+        {begging the question}
+\end{multicols}
+
+\sectionTitle{quantifiers}
+\threeFields{statement}{when T (true)?}{when F (false)?}
+\quantifierStatement
+    {$\forall xP(x)$}
+    {}
+    {P(x) is T for every x}
+    {P(x) is F for at least one x}
+\quantifierStatement
+    {$\exists xP(x)$}
+    {}
+    {P(x) is T for at least one x}
+    {P(x) is F for every x}
+\quantifierStatement
+    {$\forall x\forall yP(x,y)$}
+    {$\forall y\forall xP(x,y)$}
+    {$P(x,y)$ is T for every pair x, y}
+    {$P(x,y)$ is F for at least one pair x, y}
+\quantifierStatement
+    {$\forall x\exists yP(x,y)$}
+    {}
+    {for every x, $P(x,y)$ is T for at least one y}
+    {there is at least one x such that $P(x,y)$ is F for every y}
+\quantifierStatement
+    {$\exists y\forall xP(x,y)$}
+    {}
+    {for at least one x, $P(x,y)$ is T for every y}
+    {for every x, $P(x,y)$ is F for at least one y}
+\quantifierStatement
+    {$\exists x\exists yP(x,y)$}
+    {$\exists y\exists xP(x,y)$}
+    {$P(x,y)$ is T for at least one pair x, y}
+    {$P(x,y)$ is F for every pair x, y}
+\vspace{-\baselineskip}
+
+\sectionTitle{types of proofs}
+\twoFields{type}{description}
+\twoPartStatement
+    {direct}
+    {show that if $p$, then $q$ must follow ($p\rightarrow q$)}
+\twoPartStatement
+    {contrapositive}
+    {show that if $\neg q$, then $\neg p$ must follow ($\neg q\rightarrow\neg p$)}
+\twoPartStatement
+    {vacuous}
+    {show that $\neg p$ always holds, making $p\rightarrow q$ a tautology}
+\twoPartStatement
+    {trivial}
+    {show that $q$ always holds, making $p\rightarrow q$ a tautology}
+\twoPartStatement
+    {contradiction}
+    {show that $\neg p$ leads to a contradiction}
+\twoPartStatement
+    {cases}
+    {split the hypothesis into cases and show that $p_i\rightarrow q$ for each case}
+\twoPartStatement
+    {exhaustive}
+    {check a list of all possible cases, with each case representing a single example}
+\twoPartStatement
+    {existence (constructive)}
+    {find an element $a$ (called the witness) such that P(a) is true}
+\twoPartStatement
+    {existence (nonconstructive)}
+    {show $\exists xP(x)$ is true without finding a witness (e.g., by showing $\neg\exists xP(x)$ leads to a contradiction)}
+\twoPartStatement
+    {uniqueness}
+    {show that there is exactly one element with a particular property (show existence and uniqueness)}
+\vspace{-\baselineskip}
+
+\sectionTitle{definitions}
+\begin{multicols}{2}
+    \raggedcolumns
+    \twoFields{term}{definition}
+    \twoPartStatement
+        {hypothesis/conclusion}
+        {in $p\rightarrow q$, $p$ is the hypothesis and $q$ is the conclusion}
+    \twoPartStatement
+        {converse}
+        {the converse of $p\rightarrow q$ is $q\rightarrow p$}
+    \twoPartStatement
+        {contrapositive}
+        {the contrapositive of $p\rightarrow q$ is $\neg q\rightarrow\neg p$}
+    \twoPartStatement
+        {inverse}
+        {the inverse of $p\rightarrow q$ is $\neg p\rightarrow q$}
+    \twoPartStatement
+        {tautology}
+        {a proposition that is always true}
+    \twoPartStatement
+        {contradiction}
+        {a proposition that is always false}
+    \twoPartStatement
+        {contingency}
+        {a proposition that is neither a tautology nor a contradiction}
+    \twoFields{term}{definition}
+    \twoPartStatement
+        {corollary}
+        {a theorem that can be established directly from a theorem that has been proved}
+    \twoPartStatement
+        {even number}
+        {an integer that can be expressed in the form $n=2k,k\in\mathbb{Z}$}
+    \twoPartStatement
+        {odd number}
+        {an integer than can be expressed in the form $n=2k+1,k\in\mathbb{Z}$}
+    \twoPartStatement
+        {prime number}
+        {an integer that is only divisible by itself and 1; $\forall x((x|n)\rightarrow ((x=n)\lor(x=1)))$}
+    \twoPartStatement
+        {composite number}
+        {an integer that has an integer divisor other than itself and 1; $\exists x((x|n)\land(x\neq n)\land(x\neq 1))$}
+\end{multicols}
+
+\end{document}
