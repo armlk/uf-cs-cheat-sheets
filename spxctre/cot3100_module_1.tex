@@ -1,0 +1,708 @@
+\title{COT3100 \\ \large{Module 1}}
+\author{Ian Zou}
+
+\documentclass[12pt, letterpaper]{article}
+\setlength{\parindent}{0pt}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{longtable}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\setlength{\arrayrulewidth}{0.5mm}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.5}
+
+\begin{document}
+
+\maketitle
+
+\section*{1.4 - Predicates and Quantifiers}
+
+\textbf{Definition 1.4.1.} \textit{(Predicate Logic)}
+\medskip
+
+The statement $ x > 3 $ (or "$ x $ is greater than 3") has two parts:
+
+\medskip
+\begin{enumerate}
+    \item \textit{Subject}: the variable $ x $
+    \item \textit{Predicate}: "is greater than 3"
+\end{enumerate}
+\medskip
+
+The \textbf{predicate} refers to a property that the \textit{subject} can have.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.4.2.} \textit{(Propositional Function)}
+\medskip
+
+A \textbf{propositional function} is a statement containing variables that become a proposition when each of the variables are assigned a value or bound by a quantifier.
+\bigskip
+
+\textit{Example.}
+\medskip
+
+\textit{$ P(x) $ can be denoted as " $ x $ is greater than 3."}
+\medskip
+
+$ P(x) $ is a \textit{propositional function}. We can evaluate $ P $ at a given $ x $ (for example $ P(2) $) by plugging in the value for $ x $. Since the proposition $ 2 > 3 $ is false, $ P(2) $ is false.
+
+% TODO: maybe add a few more examples?
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.4.3.} \textit{(Preconditions)}
+\medskip
+
+A \textbf{precondition} is a statement that is used to describe valid input.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.4.4.} \textit{(Postconditions)}
+\medskip
+
+A \textbf{postcondition} is a statement that used to describe the output that should satisfy when the program has run.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.4.5.} \textit{(Quantifiers)}
+\medskip
+
+\medskip
+\begin{center}
+\begin{tabular}{|lllll|}
+\hline
+\multicolumn{5}{|c|}{\textbf{Quantifiers}}                                                                          \\ \hline
+\multicolumn{1}{|c|}{\textbf{Statement}} & \multicolumn{2}{c|}{\textbf{True}} & \multicolumn{2}{c|}{\textbf{False}} \\ \hline
+    \multicolumn{1}{|p{3em}|}{$ \forall x P(x) $}                   & \multicolumn{2}{p{5cm}|}{ $P(x) $ is true for every $ x $. }              & \multicolumn{2}{p{5cm}|}{There is an $ x $ for which $ P(x) $ is false.}               \\ \hline
+    \multicolumn{1}{|p{3em}|}{$ \exists x P(x) $}                   & \multicolumn{2}{p{5cm}|}{There is an $ x $ for which $ P(x) $ is true.}              & \multicolumn{2}{p{5cm}|}{ $ P(x) $ is false for every $ x $. }               \\ \hline
+\end{tabular}
+\end{center}
+\medskip
+
+The \textbf{universal quantifier ($ \forall $)} and \textbf{existential quantifier ($ \exists $)} have \textit{higher precedence} than all other logical operators in propositional calculus.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.4.6.} \textit{(Quantifiers Over Finite Domains)}
+\medskip
+
+When the domain of a quantifier is finite, quantified statements can be expressed using propositional logic.
+\bigskip
+
+\textit{Example.}
+\medskip
+
+\textit{What is the truth value of $ \forall x P(x) $ where $ P(x) $ is the statement "$ x^2 < 10 $" and the domain consists of the positive integers not exceeding 4?}
+\medskip
+
+The statement $ \forall x P(x) $ is equivalent to $ P(1) \wedge P(2) \wedge P(3) \wedge P(4) $. Because $ P(4) $, which is the statement "$ 4^2 < 10 $" is false, it follows that $ \forall x P(x) $ is false.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.4.7.} \textit{(Binding Variables)}
+\medskip
+
+When a quantifier is used on the variable $ x $, it is \textbf{bound}. Otherwise, it is said to be \textbf{free}. All variables that occur in a propositional function must be \textit{bound} to turn it into a proposition.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.4.8.} \textit{(Scope)}
+\medskip
+
+The \textbf{scope} of a quantifier is the part of a logical expression to which it applies. A variable is only \textit{bound} when it exists within the \textit{scope} of a quantifier; it is \textit{free} outside of the \textit{scope}.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.4.9.} \textit{(Logical Equivalences Involving Quantifiers)}
+\medskip
+
+Statements involving predicates and quantifiers are \textbf{logically equivalent} if and only if they have the same truth value no matter which predicates are substitutes and which domain is used for the variables.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.4.10.} \textit{(De Morgan's Laws)}
+\medskip
+
+\medskip
+\begin{center}
+\begin{tabular}{|llllll|}
+\hline
+\multicolumn{6}{|c|}{\textbf{De Morgan's Laws for Quantifiers}}                                                                          \\ \hline
+    \multicolumn{1}{|c|}{\textbf{Negation}} & \multicolumn{1}{c|}{\textbf{Equivalent}} & \multicolumn{2}{c|}{\textbf{True}} & \multicolumn{2}{c|}{\textbf{False}} \\ \hline
+    \multicolumn{1}{|p{3em}|}{$ \neg \exists x P(x) $} & \multicolumn{1}{p{3em}|}{$ \forall x \neg P(x)  $} & \multicolumn{2}{p{5cm}|}{ For every $ x $, $ P(x) $ is false. } & \multicolumn{2}{p{5cm}|}{There is an $ x $ for which $ P(x) $ is true.}               \\ \hline
+    \multicolumn{1}{|p{3em}|}{$ \neg \forall x P(x) $} & \multicolumn{1}{p{3em}|}{$ \exists x \neg P(x)  $} & \multicolumn{2}{p{5cm}|}{ There is an $ x $ for which $ P(x) $ is false. } & \multicolumn{2}{p{5cm}|}{$ P(x) $ is true for every $ x $. }               \\ \hline
+\end{tabular}
+\end{center}
+\medskip
+
+% TODO: a section about prolog rules and facts?
+
+\pagebreak
+
+\section{1.5 - Nested Quantifiers}
+
+\textbf{Definition 1.5.1.} \textit{(Nested Quantifiers)}
+\medskip
+
+A \textbf{nested quantifier} is where a quantifier exists within the scope of another quantifier.
+
+\medskip
+\begin{center}
+\begin{tabular}{|lllll|}
+\hline
+\multicolumn{5}{|c|}{\textbf{Quantifications of Two Variables}}                                                                          \\ \hline
+\multicolumn{1}{|c|}{\textbf{Statement}} & \multicolumn{2}{c|}{\textbf{True}} & \multicolumn{2}{c|}{\textbf{False}} \\ \hline
+    \multicolumn{1}{|p{3em}|}{$ \forall x \forall y P(x, y) $ $ \forall y \forall x P(x, y) $ }                   & \multicolumn{2}{p{5cm}|}{ $ P(x, y) $ is true for every pair $ x, y $. }              & \multicolumn{2}{p{5cm}|}{There exists a pair $ x, y $ for which $ P(x, y) $ is false. }               \\ \hline
+    \multicolumn{1}{|p{3em}|}{$ \forall x \exists y P(x, y) $}                   & \multicolumn{2}{p{5cm}|}{For every $ x $ there is a $ y $ for which $ P(x, y) $ is true. }              & \multicolumn{2}{p{5cm}|}{There is an $ x $ such that $ P(x, y) $ is false for every $ y $. }               \\ \hline
+    \multicolumn{1}{|p{3em}|}{$ \exists x \forall y P(x, y) $}                   & \multicolumn{2}{p{5cm}|}{There is an $ x $ for which $ P(x, y) $ is true for every $ y $. }              & \multicolumn{2}{p{5cm}|}{For every $ x $, there is a $ y $ for which $ P(x, y) $ is false. }               \\ \hline
+    \multicolumn{1}{|p{3em}|}{$ \exists x \exists y P(x, y) $ $ \exists y \exists x P(x, y) $ }                   & \multicolumn{2}{p{5cm}|}{There exists a pair $ x, y $ such that $ P(x, y) $ is true. }              & \multicolumn{2}{p{5cm}|}{For every pair $ x, y $, $ P(x, y) $ is false. }               \\ \hline
+\end{tabular}
+\end{center}
+\medskip
+
+\bigskip
+
+\textit{Corollary.}
+\medskip
+
+\medskip
+{\centering
+
+$ \exists y \forall x P(x, y) \not\equiv \forall x \exists y P(x, y) $
+
+\medskip
+}
+
+$ \exists y \forall x P(x, y) $: There is a $ y $ that makes $ P(x, y) $ true for every $ x $.
+\smallskip
+
+$ y $ is independent of $ x $. If we pick a value of $ y $, but there is an $ x $ for which $ P(x, y) $ is false, then the statement is false.
+
+\medskip
+\hrule
+\medskip
+
+$ \forall x \exists y P(x, y) $: For every $ x $, there exists a $ y $ such that $ P(x, y) $ is true.
+\smallskip
+
+$ y $ is dependent on $ x $. We iterate through $ x $, then see if we can pick a value for $ y $ for which $ P(x, y) $ is true.
+\bigskip
+
+\textit{Example.}
+\medskip
+\textit{Translate $ \forall x ( C(x) \vee \exists y (C(y) \wedge F(x, y))) $ into English.}
+
+\textit{ $ C(x) $: $ x $ has a computer. }
+
+\textit{ $ F(x, y) $: $ x $ and $ y $ are friends. }
+
+\textit{The domain of $ x $ and $ y $ consists of all students in the school. }
+\medskip
+
+Translation: "For every student $ x $ in the school, they either have a computer, or there exists a student $ y $ that has a computer and is friends with student $ x $."
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.5.2.} \textit{(Negation of Nested Quantifiers)}
+\medskip
+
+Statements involving nested quantifiers can be negated by successively applying the rules for negating statements involving a single quantifier.
+
+% TODO: Example for nested negation
+
+\pagebreak
+
+\section*{1.6 - Rules of Inference}
+
+\textbf{Definition 1.6.1.} \textit{(Valid Arguments in Propositional Logic)}
+\medskip
+
+An \textbf{argument} in propositional logic is a sequence of propositions. All but the final propositions in the argument are called \textbf{premises}, and the final proposition is called the \textbf{conclusion}.
+\medskip
+
+Let $ p $ be "You have a current password", and $ q $ be "You can log onto the network." Consider the proposition: "If you have a current password, then you can log onto the network." Then, the \textbf{valid argument} has the \textbf{argument form}:
+
+\medskip
+\[\centering
+    \begin{array}{l l}
+        & p \\
+        & \underline{p \rightarrow q} \\
+        \therefore & q
+    \end{array}
+\]
+\medskip
+
+This form of argument is \textbf{valid}because whenever all premises are true, the conclusion must also be true.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.6.2.} \textit{(Rules of Inference)}
+\medskip
+
+\textbf{Rules of inference} are valid argument forms that can be used in a \textit{proof} that arguments are valid.
+\medskip
+
+Truth tables can always show an argument is valid, but some propositions are too complicated to use truth tables. That's where \textit{rules of inference} come in handy.
+\medskip
+
+\medskip
+\begin{center}
+\begin{longtable}{|lllllll|}
+\hline
+\multicolumn{7}{|c|}{\textbf{Rules of Inference}}                                                                          \\ \hline
+
+\multicolumn{1}{|c|}{\textbf{Rule of Inference}} & \multicolumn{3}{c|}{\textbf{Tautology}} & \multicolumn{3}{c|}{\textbf{Name}} \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & p \\
+        & \underline{p \rightarrow q} \\
+        \therefore & q
+    \end{array}
+    \]
+    }                   & \multicolumn{3}{p{7cm}|}{$ (p \wedge (p \rightarrow q)) \rightarrow q $}              & \multicolumn{3}{p{5cm}|}{\textbf{Modus Ponens}}               \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & \neg q \\
+        & \underline{p \rightarrow q} \\
+        \therefore & \neg p
+    \end{array}
+    \]
+}                   & \multicolumn{3}{p{7cm}|}{$ (\neg q \wedge (p \rightarrow q)) \rightarrow \neg p $}              & \multicolumn{3}{p{5cm}|}{\textbf{Modus Tollens}}               \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & p \rightarrow q \\
+        & \underline{q \rightarrow r} \\
+        \therefore & p \rightarrow r
+    \end{array}
+    \]
+}                   & \multicolumn{3}{p{7cm}|}{$ ((p \rightarrow q) \wedge (q \rightarrow r)) \rightarrow (p \rightarrow r) $}              & \multicolumn{3}{p{5cm}|}{\textbf{Hypothetical Syllogism}}               \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & p \vee q \\
+        & \underline{\neg p} \\
+        \therefore & q
+    \end{array}
+    \]
+}                   & \multicolumn{3}{p{7cm}|}{$ ((p \vee q) \wedge \neg p) \rightarrow q $}              & \multicolumn{3}{p{5cm}|}{\textbf{Disjunctive Syllogism}}               \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & \underline{p} \\
+        \therefore & p \vee q
+    \end{array}
+    \]
+}                   & \multicolumn{3}{p{7cm}|}{$ p \rightarrow (p \vee q) $}              & \multicolumn{3}{p{5cm}|}{\textbf{Addition}}               \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & \underline{p \wedge q} \\
+        \therefore & p
+    \end{array}
+    \]
+}                   & \multicolumn{3}{p{7cm}|}{$ (p \wedge q) \rightarrow p $}              & \multicolumn{3}{p{5cm}|}{\textbf{Simplification}}               \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & p \\
+        & \underline{q} \\
+        \therefore & p \wedge q
+    \end{array}
+    \]
+}                   & \multicolumn{3}{p{7cm}|}{ $ ((p) \wedge (q)) \rightarrow (p \wedge q) $ }              & \multicolumn{3}{p{5cm}|}{\textbf{Conjunction}}               \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & p \vee q \\
+        & \underline{\neg p \vee r} \\
+        \therefore & q \vee r
+    \end{array}
+    \]
+}                   & \multicolumn{3}{p{7cm}|}{ $ ((p \vee q) \wedge (\neg p \vee r)) \rightarrow (q \vee r) $ }              & \multicolumn{3}{p{5cm}|}{\textbf{Resolution}}               \\ \hline
+\end{longtable}
+\end{center}
+\medskip
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.6.3.} \textit{(Rules of Inference for Quantified Statements)}
+\medskip
+
+\medskip
+\begin{center}
+\begin{longtable}{|llll|}
+\hline
+\multicolumn{4}{|c|}{\textbf{Rules of Inference for Quantified Statements}}                                                                          \\ \hline
+
+\multicolumn{1}{|c|}{\textbf{Rule of Inference}} & \multicolumn{3}{c|}{\textbf{Name}} \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & \underline{\forall x P(x)} \\
+        \therefore & q \vee r
+    \end{array}
+    \]
+    } & \multicolumn{3}{p{5cm}|}{\textbf{Universal Instantiation}} \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & \underline{P(c)} \\
+        \therefore & \forall x P(x)
+    \end{array}
+    \]
+    } & \multicolumn{3}{p{5cm}|}{\textbf{Universal Generalization}} \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & \underline{\exists x P(x)} \\
+        \therefore & P(c)
+    \end{array}
+    \]
+    } & \multicolumn{3}{p{5cm}|}{\textbf{Existential Instantiation}} \\ \hline
+
+    \multicolumn{1}{|p{4em}|}{
+    \[\centering
+    \begin{array}{l l}
+        & \underline{P(c)} \\
+        \therefore & \exists x P(x)
+    \end{array}
+    \]
+    } & \multicolumn{3}{p{5cm}|}{\textbf{Existential Generalization}} \\ \hline
+
+\end{longtable}
+\end{center}
+\medskip
+
+% TODO: Deeper dive into Resolution
+% TODO: Fallacies
+
+\pagebreak
+
+\section*{1.7 - Proofs}
+
+Formal proofs are usually harder to follow and generally not meant for human consumption.
+
+\textbf{Definition 1.7.1.} \textit{(Informal Proofs)}
+\medskip
+
+\textbf{Informal proofs} are designed for human consumption, where more than one rule of inference is used in each step, some steps may be skipped, and axioms being assumed.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.2.} \textit{(Theorem)}
+\medskip
+
+A \textbf{theorem} (also referred to as a \textbf{fact} or \textbf{result}) is a statement that can be shown to be true. It may be the universal quantification of a conditional statement with one or more premises and a conclusion, but it may also be some other type of logical statement.
+\medskip
+
+In mathematical writing, the term \textit{theorem} is usually reserved for a statement that is \textbf{considered somewhat important}.
+\bigskip
+
+\textit{Example.}
+\medskip
+
+Many thoerems assert that a property holds for all elements in a domain, which requires a universal quantifier. The standard convention is to omit it. Thus:
+
+\medskip
+{\centering
+
+"If $ x > y $, where $ x $ and $ y $ are positive real numbers, then $ x^2 > y^2 $"
+
+}
+\medskip
+
+is equal to
+
+\medskip
+{\centering
+
+"For all positive real numbers $ x $ and $ y $, then $ x^2 > y^2 $"
+
+}
+\medskip
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.3.} \textit{(Proposition)}
+\medskip
+
+A \textbf{proposition} is a statement that could be true or false. Less important theorems are sometimes called \textbf{propositions}.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.4.} \textit{(Proof)}
+\medskip
+
+A \textbf{proof} is a valid demonstration that a \textit{theorem} is true.
+\medskip
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.5.} \textit{(Axiom)}
+\medskip
+
+A \textbf{axiom} (also referred to as \textbf{postulates}) are statements we assume to be true. Axioms may be used within proofs.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.6.} \textit{(Lemma)}
+\medskip
+
+A \textbf{lemma} is a less important theorem used to prove other theorems.
+\medskip
+
+If an underlying proof is complicated to understand, it may help to demonstrate it by using and proving a series of lemmas.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.7.} \textit{(Corollary)}
+\medskip
+
+A \textbf{corollary} is a theorem that can be established directly from a proved theorem.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.8.} \textit{(Conjecture)}
+\medskip
+
+A \textbf{conjecture} is a statement that is proposed to be a true statement, usually on the basis of some partial evidence.
+\medskip
+
+When a definitive proof has been found for a conjecture, it becomes a theorem.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.9.} \textit{(Odd/Even)}
+\medskip
+
+The integer $ n $ is \textbf{even} if there exists an integer $ k $ such that $ n = 2k $.
+\medskip
+
+The integer $ n $ is \textbf{odd} if there exists an integer $ k $ such that $ n = 2k + 1 $.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.10.} \textit{(Direct Proof)}
+\medskip
+
+A \textbf{direct proof} of $ p \rightarrow q $ is constructed by assuming $ p $ is true, constructing subsequent steps using rules of inference, and finally showing that $ q $ must also be true.
+\bigskip
+
+\textit{Example.}
+\medskip
+
+\textit{Give a direct proof of the theorem: "If $ n $ is an odd integer, then $ n^2 $ is odd."}
+\medskip
+
+Note that this theorem states $ \forall x P(n) \rightarrow Q(n) $.
+
+The first step is to assume $ n $ is odd, and by the definition of an odd integer, $ n = 2k + 1 $ where $ k $ is some integer.
+
+We want to show that $ n^2 $ is odd. If we square both sides, we get $ n^2 = (2k + 1)^2 $, which expands to $ n^2 = 4k^2 + 4k + 1 $.
+
+We can then factor out the $ 2 $ in order to get $  n^2 = 2(k^2 + 2k) + 1 $, which puts the equation into the form of the definition of an odd integer. Thus, $ n^2 $ is odd if $ n $ is odd.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.11.} \textit{(Proof by Contraposition)}
+\medskip
+
+A \textbf{proof by contraposition} of $ p \rightarrow q $ is constructed by making use of $ p \rightarrow q \equiv -q \rightarrow -p $. We assume $ -q $ and use axioms, definitions, previously proven theorems, and rules of inference to show that $ -p $.
+\medskip
+
+A good way to tell when a \textit{proof by contraposition} is useful is by analyzing whether the contrapositive is able to be proved easily by a direct proof. In other words, if $ q $ is simpler to prove, \textbf{use a \textit{proof by contraposition}}.
+\bigskip
+
+\textit{Example.}
+\medskip
+
+\textit{Prove that if $ n $ is an integer and $ 3n + 2 $ is odd, then $ n $ is odd.}
+\medskip
+
+There is no direct proof to show that $ 3n + 2 = 2k + 1 $, and thus we need to use a \textit{proof by contraposition}.
+\medskip
+
+We start by assuming $ -q $, so we assume $ n $ is even. By the definition of an even integer, $ n = 2k $ for some integer $ k $.
+\medskip
+
+Now, we may substitute $ n $ for $ 2k $, and thus we have $ 3(2k) + 2 $. We can factor out the $ 2 $, and get $ 3n + 2 = 2(3k + 1) $. This is in the form of the definition of an even integer, and thus proves that $ 3n + 2 $ is even.
+\medskip
+
+Because the negation of the conclusion implies that the hypothesis is false, the original conditional statement is true. In order words, by proving the contrapositive, we proved the original statement.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.12.} \textit{(Vacuous Proof)}
+\medskip
+
+A \textbf{vacuous proof} proves $ p \rightarrow q $ is true based on the fact that $ p $ is false, since a conditional statement with a false hypothesis is guaranteed to be true.
+\bigskip
+
+\textit{Example.}
+\medskip
+
+\textit{Show that the proposition $ P(0) $ is true, where $ P(n) $ is "If $ n > 1 $, then $ n^2 > n $.}
+\medskip
+
+$ P(0) $ is "If $ 0 > 1 $, then $ 0^2 > 0 $. $ 0 > 1 $ is false. Thus, $ P(0) $ is true. The fact that $ 0^2 > 0 $ is false is irrelevant. We are proving $ P(0) $ (the if-then claim), not whether the result is true or false.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.13.} \textit{(Trivial Proof)}
+\medskip
+
+A \textbf{trivial proof} proves $ p \rightarrow q $ is true based on the fact that $ q $ is true, since a conditional statement with a true conclusion is, well, true.
+\bigskip
+
+\textit{Example.}
+\medskip
+
+\textit{Let $ P(n) $ be "If $ a $ and $ b $ are positive integers with $ a \geq b $, then $ a^n \geq b^n $. The domain is all nonnegative integers. Show that $ P(0) $ is true.}
+\medskip
+
+$ P(0) $ is "If $ a \geq b $, then $ a^0 \geq b^0 $." This is true, since $ a^0 = 1$ and $ b^0 = 1 $, which satisfies $ a^0 \geq b^0 $. Since the conclusion is true, $ P(0) $ is true. It is irrelevant whether the hypothesis is satisfied.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.14.} \textit{(Proof by Contradiction)}
+\medskip
+
+A \textbf{proof by contradiction} proves $ p $ if we can show that $ -p \rightarrow (r \wedge -r) $, where $ r $ is some proposition. Since $ r \wedge -r $ is a contradiction, $ p $ must be true if $ -p $ implies a contradiction.
+\bigskip
+
+\textit{Example.}
+\medskip
+
+\textit{Prove that $ \sqrt{2} $ is irrational by giving a proof of contradiction.}
+\medskip
+
+Let $ p $ be " $ \sqrt{2} $ is irrational." We start by stating that $ -p $ is true, or $ \sqrt{2} $ is rational.
+\medskip
+
+If $ \sqrt{2} $ is rational, then there exist integers $ a $ and $ b $ such that $ \sqrt{2} = \frac{a}{b} $, where $ b \neq 0 $ and both $ a $ and $ b $ have no common factors. Here, we are using the fact that every rational number can be written in lowest terms.
+\medskip
+
+We can square both sides and get $ 2 = \frac{a^2}{b^2} $, and thus $ a^2 = 2b^2 $.
+\medskip
+
+By the definition of even integers, $ a ^ 2 $ is even. Because multiplication is a closed operation, then $ a $ must also be even. By the definition of even integers, $ a = 2c $ where $ c $ is an arbitrary integer.
+\medskip
+
+Thus, we can say that $ (2c)^2 = 2b^2 $, which expands to $ 4c^2 = 2b^2 $.
+\medskip
+
+If we rearrange the terms, we can get $ b^2 = 2c^2 $. By the definition of even integers, $ b^2 $ is even, which we know means that $ b $ is also even. However, because we have shown that both $ a $ and $ b $ is even, it cannot be that $ a $ and $ b $  have no common factors, as the common factor between two even integers is $ 2 $. Thus, we have a contradiction.
+\medskip
+
+Since if $ \sqrt{2} $ is rational, then there is a contradiction, $ \sqrt{2} $ must be irrational. Thus, $ p $ is true.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.7.15.} \textit{(Proof of Equivalence)}
+\medskip
+
+A \textbf{proof of equivalence} proves $ p \leftrightarrow q $ by proving that $ p \rightarrow q $ and $ q \rightarrow p $ are true.
+\medskip
+
+We can establish any chain of conditional statements as long as it is possible to reach any other conditional statement by working through the chain. We can show that $ p1 $, $ p2 $, and $ p3 $ are equivalent if $ p1 \rightarrow p2 $, $ p2 \rightarrow p3 $, and $ p3 \rightarrow p1 $. This is also equivalent to $ p1 \leftrightarrow p2 \leftrightarrow p3 $.
+
+\pagebreak
+
+\section*{1.8 - Proofs}
+
+\textbf{Definition 1.8.1.} \textit{(Proof by Cases)}
+\medskip
+
+A \textbf{proof by cases} is used when a single argument cannot be used to prove all cases. A hypothesis made of a disjunction of propositions can be proved by proving each of the $ n $ conditional statements individually, and it must cover all possible cases that arise in a theorem.
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.8.2.} \textit{(Exhaustive Proof)}
+\medskip
+
+An \textbf{exhaustive proof} is a proof that establishes a result by checking all possible cases.
+\bigskip
+
+\textit{Example.}
+\medskip
+
+\textit{Prove that $ (n + 1)^3 \geq 3^n $ if $ n $ is a positive integer with $ n \leq 4 $.}
+\medskip
+
+Since the domain is limited, we can use a \textit{proof of exhaustion} for when $ n = 1 $, $ n = 2 $, $ n = 3 $, and $ n = 4 $. % TODO: Finish the example
+\medskip
+
+\bigskip
+\bigskip
+
+\textbf{Definition 1.8.3.} \textit{(Uniqueness Proof)}
+\medskip
+
+Some theorems assert that there is exactly one element with a property exists. We can prove this with an \textbf{uniqueness proof}.
+\medskip
+
+\textit{Existence}: We show that an element $ x $ with the desired property exists.
+
+\textit{Uniqueness}: We show that if $ x $ and $ y $ both had a desired property, than $ x = y $.
+\bigskip
+
+\textit{Example.}
+\medskip
+\textit{Show that if $ a $ and $ b $ are real numbers and $ a \neq 0 $, then there is a unique real number $ r $ such that $ ar + b = 0 $.}
+\medskip
+
+Note that if $ r = -\frac{b}{a} $ is a solution of $ ar + b = 0 $ because $ a (\frac{-b}{a}) + b = 0 $ and $ -b + b = 0 $. Therefore, a solution exists and proves existence.
+\medskip
+
+Then, we suppose that $ s $ is a real number such that $ as + b = 0 $. We can then say that $ ar + b = as + b $. If we subtract $ b $ on both sides, we get $ ar = as $, and if we divide $ a $, we get $ r = s $. $ s $ matches the desired property of $ r $, and we have proved that $ r = s $. Thus, we have proved uniqueness.
+
+\bigskip
+\bigskip
+\end{document}
+
