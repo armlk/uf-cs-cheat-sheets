@@ -1,0 +1,155 @@
+\documentclass{article}
+\usepackage[letterpaper, margin=0.125in]{geometry}
+\usepackage{multicol}
+\usepackage{textcomp}
+\begin{document}
+\noindent
+\textbf{constexpr}: evaluated at compile time if possible
+
+\noindent
+\textbf{consteval}: always evaluated at compile time
+
+\noindent
+\textbf{constinit}: values are initialized at program startup but are still mutable
+
+\noindent
+\textbf{inline member function}: when called, its body is copied directly instead of making a member function call (can be marked inline by defining a member function in a class .hpp or by using the \textit{inline} keyword in a class .cpp)
+
+\noindent
+\textbf{friend functions (prepended by keyword \textit{friend})}: not an actual part of their class, but can access private members (must be passed an instance of the class)
+
+\noindent
+\textbf{reinterpret\_cast\textlangle T*\textrangle (oldPtr)}: does not change the underlying bits; only changes the type interpretation
+
+\noindent
+\textbf{explicit}: prevents a constructor or conversion operator from being used for implicit type conversions; forces you to use explicitly cast or use constructor
+
+\noindent
+- \textlangle file\textrangle .good(); \textlangle file\textrangle .fail(); \textlangle file\textrangle .eof(); \textlangle file\textrangle .bad()
+
+\noindent
+- use after free; double delete; dangling pointer
+
+\noindent
+\textbf{when do you have to use member initializer list?} when a member is const or a reference
+
+\noindent
+- references must be initialized when declared and cannot be reassigned
+
+\noindent
+g++ -Wall -Wextra -Werror -std=c++20 -o output.o *.cpp
+
+\noindent
+Command-line redirection sends a program’s input or output to/from files (e.g., ls \textrangle out.txt), while piping sends the output of one program directly as input to another (e.g., ls $\vert$ grep txt).
+
+\noindent
+\textbf{stack}:
+\begin{itemize}
+    \vspace{-.8\baselineskip}
+    \item faster and smaller than the heap
+    \vspace{-.8\baselineskip}
+    \item stack pointer moves down when variables are initialized; when the pointer moves back up, all data below it falls out of scope
+    \vspace{-.8\baselineskip}
+\end{itemize}
+
+\noindent
+\textbf{heap}:
+\begin{itemize}
+    \vspace{-.8\baselineskip}
+    \item slower and bigger than the heap, but allows dynamic memory allocation
+    \vspace{-.8\baselineskip}
+    \item there is no heap pointer; compiler chooses where to store data and it is referred to by stack pointers
+    \vspace{-.8\baselineskip}
+    \item memory must be manually managed (new, delete)
+    \vspace{-.8\baselineskip}
+\end{itemize}
+
+\noindent
+\begin{multicols}{2}
+\textbf{big five}:
+\vspace{-.7\baselineskip}
+\begin{itemize}
+    \item copy constructor
+    \vspace{-.7\baselineskip}
+        \begin{itemize}
+            \item Class(const Class\& other)
+            \item perform deep copies
+            \item no delete because constructor
+        \end{itemize}
+    \vspace{-\baselineskip}
+    \item copy assignment
+    \vspace{-.7\baselineskip}
+        \begin{itemize}
+            \item Class\& operator=(const Class\& other)
+            \item if addresses are the same, return *this
+            \item delete dynamically allocated memory
+            \item perform deep copies
+            \item return *this
+        \end{itemize}
+    \vspace{-\baselineskip}
+    \item move constructor
+    \vspace{-.7\baselineskip}
+        \begin{itemize}
+            \item Class(Class\&\& other) noexcept
+            \item example of pass-by-rvalue-reference
+            \item perform shallow copies
+            \item set other object to null state
+        \end{itemize}
+    \vspace{-\baselineskip}
+    \item move assignment
+    \vspace{-.7\baselineskip}
+        \begin{itemize}
+            \item Class\& operator=(Class\&\& other) noexcept
+            \item if addresses are the same, return *this
+            \item delete dynamically allocated memory
+            \item perform shallow copies
+            \item set other object to null state
+            \item return *this
+        \end{itemize}
+    \vspace{-\baselineskip}
+    \item destructor
+    \vspace{-.7\baselineskip}
+        \begin{itemize}
+            \item \textasciitilde Class()
+            \item delete dynamically allocated memory
+            \item set members to null state
+        \end{itemize}
+    \vspace{-.7\baselineskip}
+\end{itemize}
+
+\noindent
+\textbf{value types}:
+\vspace{-.7\baselineskip}
+\begin{itemize}
+    \item rvalue (right value)
+    \vspace{-.7\baselineskip}
+        \begin{itemize}
+            \item prvalue (pure right value)
+                \begin{itemize}
+                    \item pure temporary with no "identity"; no address and cannot be assigned to
+                    \item e.g., literals, arithmetic
+                \end{itemize}
+            \item xvalue (expiring value)
+                \begin{itemize}
+                    \item named thing that is about to die
+                    \item std::move(x) converts x to an xvalue
+                \end{itemize}
+        \end{itemize}
+    \vspace{-\baselineskip}
+    \item glvalue (generalized lvalue)
+    \vspace{-.7\baselineskip}
+        \begin{itemize}
+            \item lvalue (locator value)
+                \begin{itemize}
+                    \item named thing; persists; has an address; can be assigned to
+                    \item run of the mill variable
+                \end{itemize}
+            \item xvalue (expiring value)
+                \begin{itemize}
+                    \item named thing that is about to die
+                    \item std::move(x) converts x to an xvalue
+                \end{itemize}
+        \end{itemize}
+\end{itemize}
+\end{multicols}
+\end{document}
