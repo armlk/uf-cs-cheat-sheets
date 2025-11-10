@@ -1,0 +1,236 @@
+\documentclass[10pt,a4paper]{article}
+
+% PACKAGES
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{multicol} % For two-column layout
+\usepackage{listings} % For code blocks
+\usepackage{sectsty} % To custom-format section headings
+\usepackage{enumitem} % For compact lists
+
+% PAGE GEOMETRY (TIGHT MARGINS)
+\geometry{
+  a4paper,
+  total={180mm,270mm},
+  left=5mm,
+  right = 5mm,
+  top=5mm,
+  bottom = 5mm
+}
+
+% TITLE
+\title{\textbf{C++, GDB, \& Valgrind Cheat Sheet}}
+\author{} % No author
+\date{} % No date
+
+% CUSTOM SECTION FORMATTING
+\sectionfont{\fontsize{12}{15}\selectfont\textbf}
+\subsectionfont{\fontsize{10}{12}\selectfont\textit}
+
+% CUSTOM LISTINGS (CODE) STYLE
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+
+\lstdefinestyle{cppstyle}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{blue},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  language=C++
+}
+\lstset{style=cppstyle} % Set C++ style as default
+
+% COMPACT LISTS
+\setlist[itemize]{noitemsep, nolistsep, topsep=2pt, partopsep=0pt}
+\setlist[enumerate]{noitemsep, nolistsep, topsep=2pt, partopsep=0pt}
+
+% NO PAGE NUMBERS
+\pagestyle{empty}
+
+% DOCUMENT START
+\begin{document}
+
+\begin{multicols}{2} % Start two-column layout
+  \subsection*{Access Specifiers}
+  Determines how base class members are inherited:
+
+  \begin{itemize}
+    \item \textbf{\texttt{public} inheritance}: (Most common)
+      \begin{itemize}
+        \item Base \texttt{public} $\to$ Derived \texttt{public}
+        \item Base \texttt{protected} $\to$ Derived \texttt{protected}
+        \item Base \texttt{private} $\to$ Inaccessible
+      \end{itemize}
+    \item \textbf{\texttt{protected} inheritance}:
+      \begin{itemize}
+        \item Base \texttt{public} $\to$ Derived \texttt{protected}
+        \item Base \texttt{protected} $\to$ Derived \texttt{protected}
+      \end{itemize}
+    \item \textbf{\texttt{private} inheritance}:
+      \begin{itemize}
+        \item Base \texttt{public} $\to$ Derived \texttt{private}
+        \item Base \texttt{protected} $\to$ Derived \texttt{private}
+      \end{itemize}
+  \end{itemize}
+
+  \subsection*{Constructor / Destructor Order}
+  \begin{itemize}
+    \item \textbf{Construction}: Base class constructor runs
+      \textit{first}, then derived class constructor.
+    \item \textbf{Destruction}: Derived class destructor runs
+      \textit{first}, then base class destructor (reverse order).
+  \end{itemize}
+
+  \subsection*{Calling Base Constructor}
+  Use the member initializer list to pass arguments to the base constructor.
+\begin{lstlisting}
+class Base {
+public:
+    Base(int x) { /* ... */ }
+};
+
+class Derived : public Base {
+public:
+    Derived(int x, int y) : Base(x) {
+        // y is used by Derived
+    }
+};
+\end{lstlisting}
+
+  % --- C++ POLYMORPHISM ---
+  \subsection*{Virtual Functions}
+  A function in the base class declared with \texttt{virtual}. The
+  dynamic type (the actual object) determines which function version
+  is called at runtime, not the static type (the pointer).
+
+\begin{lstlisting}
+class Animal {
+public:
+    virtual void speak() {
+        std::cout << "???";
+    }
+    // ALWAYS make base class destructors virtual!
+    virtual ~Animal() {}
+};
+
+class Dog : public Animal {
+public:
+    // 'override' is optional but recommended: compiler checks that it actually overrides a base virtual function.
+    virtual void speak() override {
+        std::cout << "Woof!";
+    }
+};
+\end{lstlisting}
+  \textbf{Usage:}
+\begin{lstlisting}
+Animal* p = new Dog();
+p->speak(); // Calls Dog::speak()
+delete p;   // Calls Dog::~Dog(), then
+            // Animal::~Animal()
+\end{lstlisting}
+
+  \subsection*{Abstract Classes \& Pure Virtual}
+  A class with one or more \textbf{pure virtual functions} (\texttt{=
+  0}) is an \textbf{abstract class} and cannot be instantiated. It
+  \textit{must} be subclassed.
+\begin{lstlisting}
+class Shape { // Abstract Base Class
+public:
+    // Pure virtual function
+    virtual double getArea() = 0;
+    virtual ~Shape() {}
+};
+
+class Circle : public Shape {
+private:
+    double r;
+public:
+    // Must implement all pure
+    // virtual functions
+    virtual double getArea() override {
+        return 3.14 * r * r;
+    }
+};
+\end{lstlisting}
+
+  % --- GDB ---
+  \section*{GDB (GNU Debugger)}
+
+  Compile with the \texttt{-g} flag to include debug symbols.
+
+  \subsection*{Starting}
+  \begin{itemize}
+    \item \texttt{gdb ./my\_program} : Start GDB session.
+    \item \texttt{gdb -tui ./my\_program} : Start with text-based GUI
+  \end{itemize}
+
+  \subsection*{Essential Commands}
+  \begin{itemize}
+    \item \texttt{run (r)}: Start program (with optional args, e.g.,
+      \texttt{r arg1}).
+    \item \texttt{break (b) <loc>}: Set breakpoint.
+      \begin{itemize}
+      \end{itemize}
+    \item \texttt{continue (c)}: Continue execution to next breakpoint.
+    \item \texttt{next (n)}: Step over (executes line, doesn't enter funcs).
+    \item \texttt{step (s)}: Step into (enters function calls).
+    \item \texttt{finish}: Step out (run until current function returns).
+    \item \texttt{print (p) <var>}: Print value of a variable.
+    \item \texttt{backtrace (bt)}: Show the call stack (func call history).
+    \item \texttt{list (l)}: Show source code around current line.
+    \item \texttt{info break}: List all breakpoints.
+    \item \texttt{delete <num>}: Delete breakpoint by number.
+    \item \texttt{quit (q)}: Exit GDB.
+  \end{itemize}
+
+  % --- VALGRIND ---
+  \section*{Valgrind (Memcheck)}
+
+  A tool for detecting memory errors (leaks, invalid access, etc.).
+  Compile with \texttt{-g} for useful line numbers.
+
+  The default tool is \textbf{Memcheck}.
+\begin{lstlisting}[language=Bash, style=]
+valgrind [options] ./my_program
+\end{lstlisting}
+
+  \subsection*{Most Common Flags}
+  \begin{itemize}
+    \item \texttt{--leak-check=full}: (Essential) Shows details for
+    \item \texttt{--log-file="report.txt"}: Write output to a file.
+  \end{itemize}
+
+  \subsection*{Interpreting Output}
+  Look for:
+  \begin{itemize}
+    \item \textbf{Invalid read / Invalid write}: Accessing memory you
+      don't own (e.g., array out of bounds, using a dangling pointer).
+    \item \textbf{Conditional jump... depends on uninitialised
+      value(s)}: Using a variable (e.g., in an \texttt{if} statement)
+      before it was given a value.
+    \item \textbf{Mismatched free() / delete / delete[]}: Using
+      \texttt{delete} on memory from \texttt{malloc}, or
+      \texttt{delete[]} on \texttt{new}, or \texttt{delete} on \texttt{new[]}.
+    \item \textbf{HEAP SUMMARY}:
+      \begin{itemize}
+        \item \texttt{in use at exit}: Should be 0 bytes.
+        \item \texttt{definitely lost}: True memory leaks. You lost
+          all pointers to this memory. \textbf{This is the one to fix!}
+      \end{itemize}
+  \end{itemize}
+
+\end{multicols} % End two-column layout
+\end{document}

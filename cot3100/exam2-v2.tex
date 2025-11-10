@@ -1,0 +1,271 @@
+\documentclass[10pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[margin=0.7in]{geometry} % Narrow margins for more content
+\usepackage{multicol} % For two-column layout
+\usepackage{parskip} % No paragraph indent, space between pars
+
+% --- Define theorem styles ---
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{prop}{Property}
+\newtheorem{ex}{Example}
+
+% --- No page numbers ---
+\pagestyle{empty}
+
+\date{} % No date
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\vspace{-9cm} % Reduce space after title
+
+\begin{multicols}{2} % Start two-column layout for page 1
+
+  \section*{Ch 3: Algorithms \& Complexity}
+
+  \subsection*{3.2: Growth of Functions (Big-O)}
+  \begin{defn}
+    Let $f, g$ be functions $\mathbb{N} \to \mathbb{R}$ or
+    $\mathbb{R} \to \mathbb{R}$.
+    We say $\mathbf{f(x) = O(g(x))}$ (Big-O) if $\exists C, k$ (witnesses) s.t.
+    $$|f(x)| \le C|g(x)| \quad \text{for all } x > k.$$
+  \end{defn}
+
+  \begin{defn}
+    $\mathbf{f(x) = \Omega(g(x))}$ (Big-Omega) if $\exists C, k$
+    (positive witnesses) s.t.
+    $$|f(x)| \ge C|g(x)| \quad \text{for all } x > k.$$
+  \end{defn}
+
+  \begin{defn}
+    $\mathbf{f(x) = \Theta(g(x))}$ (Big-Theta) if $f(x) = O(g(x))$
+    and $f(x) = \Omega(g(x))$. This is equivalent to $\exists C_1, C_2, k$ s.t.
+    $$C_1|g(x)| \le |f(x)| \le C_2|g(x)| \quad \text{for all } x > k.$$
+  \end{defn}
+
+  \textbf{Common Growth Functions (slowest to fastest):}
+  $O(1) < O(\log n) < O(n) < O(n \log n) < O(n^2) < O(n^c) < O(b^n) < O(n!)$
+
+  \textbf{Properties:}
+  \begin{itemize}
+    \item $f_1 = O(g_1), f_2 = O(g_2) \implies f_1+f_2 = O(\max(g_1, g_2))$
+    \item $f_1 = O(g_1), f_2 = O(g_2) \implies f_1 f_2 = O(g_1 g_2)$
+  \end{itemize}
+
+  \section*{Ch 4.1-4.3: Number Theory}
+
+  \subsection*{4.1: Divisibility}
+  \begin{defn}
+    If $a, b \in \mathbb{Z}$ with $a \ne 0$, we say $\mathbf{a \text{
+    divides } b}$ (written $a | b$) if $\exists c \in \mathbb{Z}$ s.t. $b = ac$.
+  \end{defn}
+
+  \begin{prop}[Properties of Divisibility]
+    \begin{itemize}
+      \item If $a|b$ and $a|c$, then $a | (mb + nc)$ for any $m, n
+        \in \mathbb{Z}$.
+      \item If $a|b$ and $b|c$, then $a|c$.
+    \end{itemize}
+  \end{prop}
+
+  \begin{thm}[Division Algorithm]
+    Let $a \in \mathbb{Z}$ and $d \in \mathbb{Z}^+$. Then $\exists!$
+    integers $q$ (quotient) and $r$ (remainder) s.t. $a = dq + r$ and
+    $0 \le r < d$.
+  \end{thm}
+
+  \subsection*{4.1: Modular Arithmetic}
+  \begin{defn}
+    Let $m \in \mathbb{Z}^+$. We say $\mathbf{a \equiv b \pmod{m}}$
+    ($a$ is congruent to $b$ modulo $m$) if $m | (a-b)$.
+  \end{defn}
+  \textbf{Equivalent statements:}
+  \begin{itemize}
+    \item $a \equiv b \pmod{m}$
+    \item $m | (a-b)$
+    \item $a = b + km$ for some $k \in \mathbb{Z}$
+    \item $a \pmod m = b \pmod m$
+  \end{itemize}
+
+  \textbf{Modular Arithmetic Properties:}
+  \begin{itemize}
+    \item $(a + b) \pmod m = ((a \pmod m) + (b \pmod m)) \pmod m$
+    \item $(a \cdot b) \pmod m = ((a \pmod m) \cdot (b \pmod m)) \pmod m$
+  \end{itemize}
+
+  % --- ADDED SECTION ---
+  \subsection*{4.2: Integer Representation}
+  For an $n$-bit number:
+  \begin{itemize}
+    \item \textbf{Sign Bit:} MSB (left-most) is $0$ for positive, $1$
+      for negative.
+    \item \textbf{One's Complement:} To negate, flip all bits.
+      (e.g., $5 = 00000101$, $-5 = 11111010$).
+    \item \textbf{Two's Complement:} Standard method. To negate: take
+      the positive $n$-bit represenation, find the one's complement
+      (flip all bits), and add 1. (e.g., $5=00000101$, $-5=11111011$)
+  \end{itemize}
+  % --- END ADDED SECTION ---
+
+  \subsection*{4.2: Primes}
+  \begin{defn}
+    A prime $p > 1$ is an integer whose only positive divisors are
+    $1$ and $p$. A number $n > 1$ that is not prime is \textbf{composite}.
+  \end{defn}
+
+  \begin{thm}[Fundamental Theorem of Arithmetic]
+    Every integer $n > 1$ can be written uniquely as a prime or as a
+    product of two or more primes in non-decreasing order.
+    $n = p_1^{e_1} p_2^{e_2} \cdots p_k^{e_k}$
+  \end{thm}
+
+  \begin{thm}
+    If $n$ is composite, it has a prime factor $\le \sqrt{n}$.
+  \end{thm}
+
+  \subsection*{4.3: GCD \& LCM}
+  \begin{defn}
+    $\mathbf{\gcd(a, b)}$: The largest integer $d$ s.t. $d|a$ and $d|b$.
+    If $\gcd(a, b) = 1$, $a$ and $b$ are \textbf{relatively prime}.
+  \end{defn}
+
+  \begin{defn}
+    $\mathbf{\text{lcm}(a, b)}$: The smallest integer $m > 0$ s.t.
+    $a|m$ and $b|m$.
+  \end{defn}
+
+  \textbf{Prime Factorization Method:}
+  $a = p_1^{a_1} \cdots p_n^{a_n}$, $b = p_1^{b_1} \cdots p_n^{b_n}$
+  \begin{itemize}
+    \item $\gcd(a, b) = p_1^{\min(a_1, b_1)} \cdots p_n^{\min(a_n, b_n)}$
+    \item $\text{lcm}(a, b) = p_1^{\max(a_1, b_1)} \cdots p_n^{\max(a_n, b_n)}$
+  \end{itemize}
+
+  \begin{thm}
+    For $a, b \in \mathbb{Z}^+$, $a \cdot b = \gcd(a, b) \cdot \text{lcm}(a, b)$
+  \end{thm}
+
+  \textbf{Euclidean Algorithm:} Finds $\gcd(a, b)$ for $a \ge b > 0$.
+  Let $r_0 = a$, $r_1 = b$.
+  \begin{align*}
+    r_0 &= r_1 q_1 + r_2 \quad (0 \le r_2 < r_1) \\
+    r_1 &= r_2 q_2 + r_3 \quad (0 \le r_3 < r_2) \\
+    &\vdots \\
+    r_{n-2} &= r_{n-1} q_{n-1} + r_n \quad (0 \le r_n < r_{n-1}) \\
+    r_{n-1} &= r_n q_n + 0
+  \end{align*}
+  $\gcd(a, b) = r_n$ (the last non-zero remainder).
+
+  \section*{Ch 4.6: Cryptography}
+
+  \subsection*{Modular Inverse}
+  \begin{defn}
+    An integer $a^{-1}$ is a \textbf{modular inverse} of $a$ modulo $m$
+    if $a \cdot a^{-1} \equiv 1 \pmod m$.
+    It exists $\iff \gcd(a, m) = 1$.
+  \end{defn}
+
+  \subsection*{Decryption Functions (Affine/Shift)}
+  If Encryption is $C = E(P) = (aP + b) \pmod m$:
+  \begin{enumerate}
+    \item To decrypt, you need the inverse function $P = D(C)$.
+    \item Algebraically solve for $P$:
+      $$ C - b \equiv aP \pmod m $$
+    \item Multiply both sides by $a^{-1}$:
+      $$ a^{-1}(C - b) \equiv P \pmod m $$
+    \item \textbf{Decryption Function:} $D(C) = a^{-1}(C - b) \pmod m$.
+  \end{enumerate}
+
+  % --- REVISED SECTION ---
+  \subsection*{Transposition Decryption Example}
+  Decrypt \textbf{"ATNACDXTAWTKA"} w/ key \textbf{"4, 1, 3, 2"}.
+  \begin{enumerate}
+    \item \textbf{Find Dims:} $N=13, k=4$. Rows $R = \lceil 13/4 \rceil = 4$.
+    \item \textbf{Col Lengths:} $13 \pmod 4 = 1$. The first
+      \textbf{1} column in the \textit{sorted} key order gets an extra char.
+      \begin{itemize}
+        \item Key '1' $\to$ 4 chars.
+        \item Key '2' $\to$ 3 chars.
+        \item Key '3' $\to$ 3 chars.
+        \item Key '4' $\to$ 3 chars.
+      \end{itemize}
+    \item \textbf{Break Ciphertext:} Break $N=13$ string by key
+      order: (Key 4) (Key 1) (Key 3) (Key 2).
+      \begin{itemize}
+        \item Key 4 (len 3): "ATN"
+        \item Key 1 (len 4): "ACDX"
+        \item Key 3 (len 3): "TAW"
+        \item Key 2 (len 3): "TKA"
+      \end{itemize}
+    \item \textbf{Fill Grid \& Read Rows:}
+      Write pieces into columns \textbf{by key number}.
+      \begin{tabular}{cccc}
+        \textbf{Col 1} & \textbf{Col 2} & \textbf{Col 3} & \textbf{Col 4} \\
+        (Key 1) & (Key 2) & (Key 3) & (Key 4) \\ \hline
+        A & T & T & A \\
+        C & K & A & T \\
+        D & A & W & N \\
+        X &   &   &
+      \end{tabular}
+      \\ Read rows: "ATTACKATDAWNX"
+  \end{enumerate}
+  % --- END REVISED SECTION ---
+
+  \subsection*{Fast Modular Exponentiation}
+  To compute $b^n \pmod m$, write $n$ in binary.
+  Compute $b, b^2, b^4, \dots \pmod m$ by repeated squaring.
+  Multiply terms where $a_i = 1$.
+  \begin{ex}
+    $7^{11} \pmod{13}$: $11 = (1011)_2 = 8 + 2 + 1$.
+    $7^1 \equiv 7, 7^2 \equiv 10, 7^4 \equiv 9, 7^8 \equiv 3 \pmod{13}$.
+    $7^{11} = 7^8 \cdot 7^2 \cdot 7^1 \equiv 3 \cdot 10 \cdot 7
+    \equiv 2 \pmod{13}$.
+  \end{ex}
+
+  \section*{Ch 5: Induction}
+
+  \subsection*{5.1: Mathematical Induction}
+  Used to prove $P(n)$ for all integers $n \ge n_0$.
+
+  \textbf{Template (Weak Induction):}
+  \begin{enumerate}
+    \item \textbf{Basis Step:} Show $P(n_0)$ is true.
+    \item \textbf{Inductive Hypothesis (IH):} Assume $P(k)$ is true
+      for arbitrary $k \ge n_0$.
+    \item \textbf{Inductive Step:} Show $P(k) \implies P(k+1)$.
+    \item \textbf{Conclusion:} By induction, $P(n)$ is true $\forall n \ge n_0$.
+  \end{enumerate}
+
+  \begin{ex}[Summation]
+    Prove $\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$ for $n \ge 1$.
+    \begin{enumerate}
+      \item \textbf{Basis ($n=1$):} $1 = \frac{1(2)}{2} = 1$. True.
+      \item \textbf{IH:} Assume $\sum_{i=1}^{k} i = \frac{k(k+1)}{2}$
+        for $k \ge 1$.
+      \item \textbf{Step:} $\sum_{i=1}^{k+1} i = \left(
+        \sum_{i=1}^{k} i \right) + (k+1) = \frac{k(k+1)}{2} + (k+1) =
+        (k+1)(\frac{k}{2} + 1) = \frac{(k+1)(k+2)}{2}$.
+    \end{enumerate}
+  \end{ex}
+
+  \subsection*{5.2: Strong Induction}
+  \textbf{Template (Strong Induction):}
+  \begin{enumerate}
+    \item \textbf{Basis Step(s):} Show $P(n_0)$ (and potentially
+      $P(n_0+1)$ etc.) is true.
+    \item \textbf{IH:} Assume $P(j)$ is true for \textbf{all} $j$
+      s.t. $n_0 \le j \le k$.
+    \item \textbf{Inductive Step:} Show $[P(n_0) \land \dots \land
+      P(k)] \implies P(k+1)$.
+  \end{enumerate}
+
+  \begin{thm}[Well-Ordering Principle]
+    Every non-empty set of non-negative integers has a least element.
+  \end{thm}
+
+\end{multicols} % End two-column layout
+\end{document}
