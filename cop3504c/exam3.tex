@@ -1,0 +1,316 @@
+\documentclass[10pt, landscape, a4paper]{article}
+
+% --- UNIVERSAL PREAMBLE BLOCK ---
+\usepackage[a4paper, top=0.5cm, bottom=0.5cm, left=0.5cm, right=0.5cm]{geometry}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage[english]{babel}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+% Compact list settings
+\setlist{nosep}
+\setlist[itemize]{leftmargin=*}
+\setlist[enumerate]{leftmargin=*}
+
+% Compact section titles
+\titleformat{\section}{\large\bfseries\uppercase}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\bfseries}{}{0em}{}
+\titlespacing*{\section}{0pt}{2pt}{2pt}
+\titlespacing*{\subsection}{0pt}{2pt}{0pt}
+
+% Remove page numbers for max space
+\pagestyle{empty}
+
+% Color definitions for visual separation
+\definecolor{sectionline}{RGB}{0,0,0}
+
+\begin{document}
+
+\begin{multicols*}{3}
+
+  % --- DATA STRUCTURES COMPLEXITY TABLE ---
+  \section{C++ Data Structure Complexities}
+  \scriptsize
+  \begin{tabular}{@{}l@{\hspace{2pt}}l@{\hspace{2pt}}l@{\hspace{2pt}}l@{\hspace{2pt}}l@{}}
+    \toprule
+    \textbf{DS} & \textbf{Access} & \textbf{Find} & \textbf{Ins/Del}
+    & \textbf{Common Funcs} \\
+    \midrule
+    \textbf{Array} & $O(1)$ & $O(n)$ & N/A & \texttt{[]} \\
+    \textbf{Vector} & $O(1)$ & $O(n)$ & $O(n)^*$ & \texttt{[]},
+    \texttt{at}, \texttt{push\_back} \\
+    & & & & \texttt{insert}, \texttt{erase} \\
+    \textbf{List (DLL)} & $O(n)$ & $O(n)$ & $O(1)$ &
+    \texttt{push\_back/front} \\
+    & & & & \texttt{insert}, \texttt{erase} \\
+    \textbf{Fwd List} & $O(n)$ & $O(n)$ & $O(1)$ & \texttt{push\_front} \\
+    \textbf{Deque} & $O(1)$ & $O(n)$ & $O(n)^*$ & \texttt{push\_back/front} \\
+    \textbf{Stack} & $O(1)$ & - & $O(1)$ & \texttt{push},
+    \texttt{pop}, \texttt{top} \\
+    \textbf{Queue} & $O(1)$ & - & $O(1)$ & \texttt{push},
+    \texttt{pop}, \texttt{front} \\
+    \textbf{Set} & - & $O(\lg n)$ & $O(\lg n)$ & \texttt{insert},
+    \texttt{find}, \texttt{erase} \\
+    \textbf{Unord Set} & - & $O(1)^\dagger$ & $O(1)^\dagger$ &
+    \texttt{insert}, \texttt{find}, \texttt{erase} \\
+    \textbf{Map} & $O(\lg n)$ & $O(\lg n)$ & $O(\lg n)$ &
+    \texttt{[]}, \texttt{insert}, \texttt{find} \\
+    \textbf{Unord Map} & $O(1)^\dagger$ & $O(1)^\dagger$ &
+    $O(1)^\dagger$ & \texttt{[]}, \texttt{insert}, \texttt{find} \\
+    \bottomrule
+  \end{tabular} \\
+  \textit{* $O(1)$ at end (vector) or ends (deque). $\dagger$ Average
+  case; worst $O(n)$.}
+  \normalsize
+
+  % --- LINKED LISTS ---
+  \section{Linked Lists (LL)}
+  \textbf{Singly LL:} Node contains \texttt{data} and \texttt{next}.
+  \textbf{Doubly LL:} Node contains \texttt{data}, \texttt{next}, and
+  \texttt{prev}.
+
+  \subsection{Operations}
+  \begin{itemize}
+    \item \textbf{Traversal:} $O(n)$. Start at head, loop until
+      \texttt{nullptr}.
+    \item \textbf{Front Insert (SLL/DLL):} $O(1)$. New node points to
+      head, head points to new.
+    \item \textbf{Tail Insert:} $O(1)$ if tail pointer exists, else $O(n)$.
+    \item \textbf{Middle Insert:} $O(n)$ to find spot, $O(1)$ to rewire.
+  \end{itemize}
+
+  \subsection{Pointer Logic (Insert Node \texttt{N} after \texttt{P})}
+  \begin{itemize}
+    \item \textbf{SLL:} \texttt{N->next = P->next; P->next = N;}
+    \item \textbf{DLL:} \texttt{N->next = P->next; N->prev = P;} \\
+      \texttt{P->next->prev = N;} (if \texttt{P->next} exists) \\
+      \texttt{P->next = N;}
+  \end{itemize}
+
+  \subsection{Comparison vs Array/Vector}
+  \begin{itemize}
+    \item \textbf{Memory:} LL has overhead (pointers) per node.
+      Vector is contiguous.
+    \item \textbf{Access:} LL is sequential $O(n)$. Vector is random $O(1)$.
+    \item \textbf{Resizing:} LL is dynamic (no copy needed). Vector
+      doubles capacity \& copies elements when full.
+  \end{itemize}
+
+  % --- STACKS & QUEUES ---
+  \section{Stacks \& Queues}
+  \textbf{Stack (LIFO):} Implemented via Vector, List, or Array.
+  \begin{itemize}
+    \item \textbf{Array:} Checks capacity. \texttt{top\_index++}.
+      Potential overflow.
+    \item \textbf{List:} Push/Pop at head ($O(1)$). No overflow unless OOM.
+    \item \textbf{Applications:} Function call stack, recursion, parsing.
+  \end{itemize}
+
+  \textbf{Queue (FIFO):}
+  \begin{itemize}
+    \item \textbf{List:} Enqueue at tail, Dequeue at head. Need tail pointer.
+    \item \textbf{Circular Array:} Use \texttt{front} and \texttt{size/count}.
+    \item \textbf{Wrap-around:} \texttt{index = (index + 1) \% capacity}.
+    \item \textbf{Full/Empty:} Hard to distinguish if only using
+      \texttt{front/rear}; use \texttt{size} variable.
+  \end{itemize}
+
+  % --- ITERATORS ---
+  \section{Iterators}
+  Object allowing traversal of container elements.
+  \begin{itemize}
+    \item \textbf{Usage:} \texttt{for(auto it = c.begin(); it != c.end(); ++it)}
+  \end{itemize}
+
+  \subsection{Categories}
+  \begin{itemize}
+    \item \textbf{Random Access:} \texttt{+}, \texttt{-},
+      \texttt{[]}, \texttt{<}, \texttt{>}. (Vector, Deque, Array).
+    \item \textbf{Bidirectional:} \texttt{++}, \texttt{--}. (List, Set, Map).
+    \item \textbf{Forward:} \texttt{++} only. (Forward List, Unordered Map/Set).
+  \end{itemize}
+
+  \subsection{Invalidation}
+  \begin{itemize}
+    \item \textbf{Vector:} Insertion/Resize invalidates \textit{all}
+      iterators (memory shift).
+    \item \textbf{List/Map/Set:} Insertion/Deletion only invalidates
+      iterators to the \textit{specific} node removed.
+  \end{itemize}
+
+  % --- SETS & MAPS ---
+  \section{Sets \& Maps}
+  \textbf{Ordered (std::set/map):}
+  \begin{itemize}
+    \item \textbf{Structure:} Balanced BST (Red-Black Tree).
+    \item \textbf{Order:} Keys sorted by \texttt{<}.
+    \item \textbf{Iterating:} In-order traversal produces sorted output.
+  \end{itemize}
+
+  \textbf{Unordered (std::unordered\_set/map):}
+  \begin{itemize}
+    \item \textbf{Structure:} Hash Table with chaining/buckets.
+    \item \textbf{Order:} Undefined. Depends on hash.
+    \item \textbf{Reqs:} Key needs \texttt{hash} function and
+      \texttt{==} operator.
+  \end{itemize}
+
+  \textbf{Map Specifics:}
+  \begin{itemize}
+    \item Stores \texttt{std::pair<Key, Value>}.
+    \item \texttt{map[key]} creates default element if key missing.
+    \item \texttt{map.find(key)} returns iterator to end if missing.
+    \item Keys are \texttt{const} (cannot modify key in place).
+    \item No duplicate keys (use \texttt{multimap} for duplicates).
+  \end{itemize}
+
+  % --- SORTING & SEARCHING ---
+  \section{Sorting \& Searching}
+  \scriptsize
+  \begin{tabular}{@{}l@{\hspace{2pt}}l@{\hspace{2pt}}l@{\hspace{2pt}}l@{\hspace{2pt}}l@{}}
+    \toprule
+    \textbf{Algo} & \textbf{Best} & \textbf{Avg} & \textbf{Worst} &
+    \textbf{Space} \\
+    \midrule
+    \textbf{Bubble} & $O(n)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ \\
+    \textbf{Insertion} & $O(n)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ \\
+    \textbf{Selection} & $O(n^2)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ \\
+    \textbf{Merge} & $N \lg N$ & $N \lg N$ & $N \lg N$ & $O(n)$ \\
+    \textbf{Quick} & $N \lg N$ & $N \lg N$ & $O(n^2)$ & $O(\lg n)$ \\
+    \textbf{Bin Search} & $O(1)$ & $O(\lg n)$ & $O(\lg n)$ & $O(1)$ \\
+    \bottomrule
+  \end{tabular}
+  \normalsize
+
+  \subsection{Algorithm Mechanics}
+  \begin{itemize}
+    \item \textbf{Selection:} Find min, swap with current index.
+      Constant writes.
+    \item \textbf{Insertion:} Take element, shift sorted left-side to
+      make room. Good for nearly sorted.
+    \item \textbf{Bubble:} Swap adjacent if wrong order. Largest
+      bubbles to end. Stop if no swaps in pass.
+    \item \textbf{Merge:} Recursive split, merge sorted halves. Stable.
+    \item \textbf{Quick:} Pivot partition. Small left, large right.
+      Unstable. Worst case: bad pivot (sorted array).
+  \end{itemize}
+
+  \subsection{Searching}
+  \begin{itemize}
+    \item \textbf{Linear:} $O(n)$. Any data.
+    \item \textbf{Binary:} $O(\lg n)$. Requires \textbf{Sorted Random
+      Access} data.
+  \end{itemize}
+
+  % --- FUNCTIONAL C++ ---
+  \section{Functional C++}
+  \subsection{Function Pointers}
+  Stores address of a function. Decays from func name.
+\begin{verbatim}
+// Return Type (*PtrName)(Args...)
+double (*funcPtr)(int) = &myFunc;
+funcPtr(5); // Call
+\end{verbatim}
+
+  \subsection{Functors (Function Objects)}
+  Class that overloads \texttt{operator()}.
+  \begin{itemize}
+    \item \textbf{Pros:} Can hold state (member variables).
+    \item \textbf{Usage:} Pass to STL algos (e.g., sort comparator).
+  \end{itemize}
+\begin{verbatim}
+struct AddX {
+  int x;
+  AddX(int val) : x(val) {}
+  int operator()(int y) { return x + y; }
+};
+\end{verbatim}
+
+  \subsection{Lambdas}
+  Anonymous inline functions.
+  \textbf{Syntax:} \texttt{[capture](params) -> return \{ body \}}
+  \begin{itemize}
+    \item \texttt{[]} : No capture.
+    \item \texttt{[=]} : Capture all local vars by value (copy).
+    \item \texttt{[\&]} : Capture all local vars by reference.
+    \item \texttt{[x, \&y]} : x by value, y by ref.
+  \end{itemize}
+  \textbf{Dangling Ref:} Capturing local var by ref in a lambda that
+  outlives the scope causes undefined behavior.
+
+  % --- RECURSION ---
+  \section{Recursion}
+  \begin{itemize}
+    \item \textbf{Base Case:} Stops recursion (e.g., \texttt{if(n==0) return;}).
+    \item \textbf{Recursive Step:} Calls self with smaller input.
+    \item \textbf{Stack Overflow:} Too many frames (missing base case).
+    \item \textbf{Tail Recursion:} Recursive call is last action (optimizable).
+  \end{itemize}
+
+  % --- PYTHON ---
+  \section{Python}
+  \subsection{Basics}
+  \begin{itemize}
+    \item \textbf{Variables:} Names bound to objects (References), not buckets.
+    \item \textbf{Rebinding:} \texttt{x = 5} changes what x points
+      to, doesn't modify object 5.
+    \item \textbf{Comparisons:}
+      \begin{itemize}
+        \item \texttt{==} checks value equality (content).
+        \item \texttt{is} checks identity (memory address).
+      \end{itemize}
+  \end{itemize}
+
+  \subsection{Mutability}
+  \begin{itemize}
+    \item \textbf{Immutable:} int, float, string, tuple. Modifying
+      creates NEW object.
+    \item \textbf{Mutable:} list, dict, set. Modified in-place.
+    \item \textbf{Aliasing:} \texttt{b = a} (if a is list). Modifying
+      \texttt{b} affects \texttt{a}.
+  \end{itemize}
+
+  \subsection{Argument Passing}
+  \textbf{Pass-by-Object-Reference:}
+  \begin{itemize}
+    \item Func gets reference to object.
+    \item If object is mutable, changes persist outside func.
+    \item If object is immutable, func creates local copy on write.
+  \end{itemize}
+
+  \subsection{Containers}
+  \begin{itemize}
+    \item \textbf{List:} \texttt{[1, 2]}. Ordered, mutable, duplicates ok.
+    \item \textbf{Tuple:} \texttt{(1, 2)}. Ordered, immutable. Use
+      for dict keys.
+    \item \textbf{Set:} \texttt{\{1, 2\}}. Unordered, unique
+      elements. $O(1)$ lookups.
+    \item \textbf{Dict:} \texttt{\{'k': v\}}. Key-value. Keys must be
+      immutable (hashable). Insertion-ordered (modern Python).
+  \end{itemize}
+
+  \subsection{Slicing \& Copying}
+  \begin{itemize}
+    \item \textbf{Slicing:} \texttt{L[start:stop:step]}. Returns new
+      list (shallow copy).
+    \item \textbf{Shallow Copy:} \texttt{L2 = list(L1)}. Copies
+      references. Nested objects shared.
+    \item \textbf{Deep Copy:} \texttt{copy.deepcopy(L)}. Copies
+      everything recursively.
+  \end{itemize}
+
+  \subsection{OO \& Special Methods}
+  \begin{itemize}
+    \item \texttt{\_\_init\_\_}: Constructor.
+    \item \texttt{\_\_str\_\_}: String representation (for print).
+    \item \texttt{\_\_eq\_\_}: Defines \texttt{==} behavior.
+    \item \textbf{Inheritance:} \texttt{class Child(Parent):}.
+    \item \texttt{super().\_\_init\_\_()}: Call parent logic.
+  \end{itemize}
+
+\end{multicols*}
+\end{document}
