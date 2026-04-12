@@ -1,0 +1,212 @@
+\documentclass[9pt]{article}
+\usepackage[margin=0.75in, top=0.65in, bottom=0.65in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{parskip}
+\usepackage{titlesec}
+\usepackage{multicol}
+
+\definecolor{darkblue}{RGB}{20,55,120}
+\definecolor{rulegray}{RGB}{180,180,190}
+
+\titleformat{\section}[block]
+  {\normalfont\normalsize\bfseries\color{darkblue}}
+  {}{0pt}{}[\vspace{1pt}\textcolor{rulegray}{\hrule height 0.4pt}\vspace{3pt}]
+\titlespacing{\section}{0pt}{7pt}{0pt}
+
+\titleformat{\subsection}[runin]
+  {\normalfont\small\bfseries}
+  {}{0pt}{}[.\enspace]
+\titlespacing{\subsection}{0pt}{3pt}{0pt}
+
+\setlist[itemize]{leftmargin=1.4em, topsep=1pt, itemsep=0pt, parsep=0pt}
+\setlist[enumerate]{leftmargin=1.6em, topsep=1pt, itemsep=1pt, parsep=0pt}
+\setlist[description]{leftmargin=0pt, topsep=1pt, itemsep=2pt}
+
+\pagestyle{plain}
+\setlength{\parskip}{2pt}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+
+%=============================================================
+\section{Average Memory Access Time (AMAT)}
+
+\textbf{General:}\enspace $\text{AMAT} = \text{HT} + \text{MR} \times \text{MP}$\enspace
+where HT = Hit Time, MR = Miss Rate, MP = Miss Penalty.
+
+\vspace{3pt}
+\begin{multicols}{2}
+
+\subsection{Look-Aside: L1 + MM}
+CPU sends requests to \textbf{both} L1 and MM simultaneously; MM is cancelled on an L1 hit. MP is only the \emph{extra} time beyond L1.
+$$\text{AMAT} = \text{HR}_{L1} \times \text{HT}_{L1} + \text{MR}_{L1} \times \text{HT}_{MM}$$
+
+\subsection{Look-Through: L1 + MM}
+CPU checks L1 first; accesses MM only on a miss, paying the full MM hit time as the penalty.
+$$\text{AMAT} = \text{HT}_{L1} + \text{MR}_{L1} \times \text{HT}_{MM}$$
+
+\columnbreak
+
+\subsection{Look-Aside: L1 + L2 + MM}
+L1 and L2 checked simultaneously; MM accessed only if both miss.
+$$\text{AMAT} = \text{HR}_{L1} \cdot \text{HT}_{L1} + \text{MR}_{L1}(\text{HR}_{L2} \cdot \text{HT}_{L2} + \text{HT}_{MM} \cdot \text{MR}_{L2})$$
+
+\subsection{Look-Through: L1 + L2 + MM}
+Sequential: check L1, then L2 on miss, then MM on L2 miss.
+$$\text{AMAT} = \text{HT}_{L1} + \text{MR}_{L1}\bigl[\text{HT}_{L2} + \text{MR}_{L2} \cdot \text{HT}_{MM}\bigr]$$
+
+\end{multicols}
+
+%=============================================================
+\section{Cache Designs}
+
+\begin{multicols}{2}
+
+\begin{description}
+  \item[\textbf{Fully Associative.}] A block can go in \emph{any} cache line---maximum flexibility, but all tags must be checked in parallel (costly hardware).
+  \item[\textbf{Direct Mapped.}] Each block maps to \emph{exactly one} line (address mod \#lines)---fast and simple, but prone to conflict misses.
+  \item[\textbf{Set Associative} ($k$-way)\textbf{.}] Cache split into sets; a block maps to one set and can occupy any of its $k$ lines---a practical balance.
+\end{description}
+
+\columnbreak
+
+\textbf{Address decomposition} ($M$ = addr bits, $S$ = \#sets, $B$ = block bytes):
+
+\vspace{3pt}
+\begin{tabular}{@{}lll@{}}
+  \toprule
+  \textbf{Field} & \textbf{Bits} & \textbf{Note} \\
+  \midrule
+  Offset & $o = \log_2 B$   & byte within block \\
+  Index  & $i = \log_2 S$   & selects set; 0 if fully assoc. \\
+  Tag    & $t = M - i - o$  & identifies the block \\
+  \bottomrule
+\end{tabular}
+
+\vspace{3pt}
+\textbf{Total cache bits:}\enspace $S \times k \times (8B + t + 1)$\enspace{\small(+1 valid bit/line)}
+
+\end{multicols}
+
+%=============================================================
+\section{Branch Prediction}
+
+\begin{multicols}{2}
+
+\subsection{Static vs.\ Dynamic}
+\textbf{Static:} decided at compile time (e.g., always not-taken, backward branches taken); does not adapt to runtime behavior.
+\textbf{Dynamic:} hardware tracks branch outcomes at runtime via a Branch Prediction Buffer and updates predictions accordingly.
+
+\subsection{2-Level Prediction Scheme}
+A \textbf{Branch History Register (BHR)} shift-records the last $k$ branch outcomes (T/NT). Its value indexes a \textbf{Pattern History Table (PHT)} of 2-bit counters, capturing inter-branch correlations for higher accuracy.
+
+\columnbreak
+
+\subsection{2-Bit Saturating Counter}
+Requires \textbf{two} consecutive mispredictions to change the prediction, tolerating single anomalies.
+
+\vspace{3pt}
+\begin{tabular}{@{}cccc@{}}
+  \toprule
+  \textbf{State} & \textbf{Prediction} & \textbf{Taken} & \textbf{Not-Taken} \\
+  \midrule
+  \texttt{11} & Strongly Taken     & \texttt{11} & \texttt{10} \\
+  \texttt{10} & Weakly Taken       & \texttt{11} & \texttt{01} \\
+  \texttt{01} & Weakly Not-Taken   & \texttt{10} & \texttt{00} \\
+  \texttt{00} & Strongly Not-Taken & \texttt{01} & \texttt{00} \\
+  \bottomrule
+\end{tabular}
+
+\end{multicols}
+
+%=============================================================
+\section{Single-Cycle vs.\ Pipelined Execution}
+
+\begin{multicols}{2}
+
+\textbf{Single-cycle:} clock period = worst-case instruction path; every instruction takes exactly one (long) cycle:
+$$T_{\text{clk}} = \max(\text{all instruction delays})$$
+
+\textbf{Pipelined:} clock period = slowest stage; one instruction completes \emph{every} cycle at steady state:
+$$T_{\text{clk}} = \max(\text{stage delays})\qquad \text{speedup} \approx N$$
+
+\columnbreak
+
+\subsection{Cycle Count ($N$ stages, $I$ instructions, $s$ stalls)}
+$$\boxed{\text{Total cycles} = N + (I-1) + s}$$
+The first instruction drains in $N$ cycles; each additional instruction adds 1; each stall bubble adds 1. With no hazards ($s=0$): cycles $= N + I - 1$.
+
+\end{multicols}
+
+%=============================================================
+\section{5-Stage Pipeline}
+
+\begin{enumerate}
+  \item \textbf{IF --- Instruction Fetch.} Fetch the instruction from memory using the PC; increment the PC.
+  \item \textbf{ID --- Instruction Decode / Register Read.} Decode the opcode, generate control signals, read source register values, and evaluate branch conditions.
+  \item \textbf{EX --- Execute.} ALU performs the operation or computes a memory address.
+  \item \textbf{MEM --- Memory Access.} Loads read from data memory; stores write to it; other instructions pass through.
+  \item \textbf{WB --- Write Back.} The ALU result or loaded value is written to the destination register.
+\end{enumerate}
+
+%=============================================================
+\section{Pipeline Hazards}
+
+\begin{multicols}{2}
+
+\subsection{Structural Hazards}
+\textit{Cause:} Two instructions need the same hardware resource simultaneously (e.g., one memory for both IF and MEM).
+\textit{Solutions:} \textbf{stall} until free; or \textbf{duplicate hardware} (separate I-cache and D-cache, extra ALUs).
+
+\vspace{4pt}
+\subsection{Data Hazards}
+\textit{Cause:} An instruction needs a value not yet written by a prior instruction in the pipeline (\textbf{RAW} is most common).
+\textit{Solutions:}
+\begin{itemize}
+  \item \textbf{Forwarding/Bypassing:} Route the result from EX or MEM/WB back to EX---eliminates most RAW stalls.
+  \item \textbf{Load-Use Stall:} Load result unavailable until after MEM; insert one bubble (forwarding insufficient).
+  \item \textbf{Code Reordering:} Compiler fills hazard slots with independent instructions.
+\end{itemize}
+
+\columnbreak
+
+\subsection{Control Hazards}
+\textit{Cause:} Instructions are fetched after a branch before its outcome is known---potentially the wrong path.
+\textit{Solutions:}
+\begin{itemize}
+  \item \textbf{Stall/Flush:} Wait for branch resolution; flush wrong instructions. Simple but costly.
+  \item \textbf{Branch Prediction:} Speculatively fetch the predicted path; flush only on misprediction.
+  \item \textbf{Delayed Branching:} Always execute the instruction(s) in the \emph{delay slot} after the branch; compiler fills slots with useful independent work.
+\end{itemize}
+
+\end{multicols}
+
+%=============================================================
+\section{Forwarding Rules}
+
+\textit{Note: Branch instructions consume their source values in the \textbf{ID} stage. R-type instructions and load/store address calculations consume values in the \textbf{EX} stage.}
+
+\vspace{4pt}
+\begin{tabular}{@{}llll@{}}
+  \toprule
+  \textbf{Producer} & \textbf{Consumer} & \textbf{Forward Path} & \textbf{Stalls} \\
+  \midrule
+  R-type & R-type or LW/SW (addr) & EX $\to$ EX & 0 \\
+  R-type & Branch                 & EX $\to$ ID & 1 \\
+  \addlinespace
+  LW     & R-type                 & MEM $\to$ EX & 1 \\
+  LW     & Branch                 & MEM $\to$ ID & 2 \\
+  LW     & LW/SW (addr)           & MEM $\to$ EX & 1 \\
+  \bottomrule
+\end{tabular}
+
+\vspace{6pt}
+\textbf{Branch misprediction:} When a branch exits the ID stage and the prediction is wrong, the instruction fetched behind it is turned into a stall (bubble) and the correct target instruction is loaded in its place.
+
+\end{document}
