@@ -1,0 +1,297 @@
+\documentclass[7pt,landscape]{article}
+\usepackage[landscape,top=0.25in,bottom=0.25in,left=0.3in,right=0.3in]{geometry}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{microtype}
+
+\definecolor{secblue}{RGB}{0,70,140}
+\definecolor{subsecred}{RGB}{160,30,30}
+\definecolor{headgray}{RGB}{220,225,235}
+\definecolor{rowalt}{RGB}{240,244,255}
+
+\titleformat{\section}{\bfseries\small\color{secblue}}{}{0em}{}[\vspace{-2pt}\color{secblue}\hrule\vspace{2pt}]
+\titleformat{\subsection}{\bfseries\footnotesize\color{subsecred}}{}{0em}{}
+\titlespacing{\section}{0pt}{4pt}{1pt}
+\titlespacing{\subsection}{0pt}{2pt}{1pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\columnsep}{0.22in}
+\setlength{\columnseprule}{0.3pt}
+
+\setlist[itemize]{noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt,leftmargin=8pt,label=\textbullet}
+\setlist[enumerate]{noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt,leftmargin=10pt}
+
+\newcommand{\On}[1]{\ensuremath{O(#1)}}
+\newcommand{\tblhd}[1]{\cellcolor{headgray}\textbf{\footnotesize #1}}
+\newcommand{\kw}[1]{\textbf{\textcolor{secblue}{#1}}}
+
+\begin{document}
+\begin{center}
+  {\large\bfseries COP3530 Exam 2 Cheat Sheet} \quad {\small Modules 8--12}
+\end{center}
+\vspace{-4pt}
+\begin{multicols}{4}
+
+%% ─────────────────────────────────────────
+\section{SORTING}
+
+\subsection{Complexities}
+\vspace{2pt}
+{\footnotesize
+\begin{tabular}{@{}l c c c c c@{}}
+\tblhd{Sort} & \tblhd{Best} & \tblhd{Avg} & \tblhd{Worst} & \tblhd{Space} & \tblhd{IP?}\\
+\midrule
+Bubble    & $n$ & $n^2$ & $n^2$ & 1 & \checkmark\\
+\rowcolor{rowalt}
+Selection & $n^2$ & $n^2$ & $n^2$ & 1 & \checkmark\\
+Insertion & $n$ & $n^2$ & $n^2$ & 1 & \checkmark\\
+\rowcolor{rowalt}
+Shell     & $n^{7/6}$ & $n^{5/4}$ & $n^2$ & 1 & \checkmark\\
+Quick     & $n\lg n$ & $n\lg n$ & $n^2$ & $\lg n$ & \checkmark\\
+\rowcolor{rowalt}
+Merge     & $n\lg n$ & $n\lg n$ & $n\lg n$ & $n$ & \texttimes\\
+Heap      & $n\lg n$ & $n\lg n$ & $n\lg n$ & 1 & \checkmark\\
+\end{tabular}
+}
+
+\vspace{3pt}
+\subsection{In-Progress Rules}
+\begin{itemize}
+  \item \kw{Bubble}: after $k$ passes, \textbf{last $k$} elements are final
+  \item \kw{Selection}: after $k$ passes, \textbf{first $k$} elements are final
+  \item \kw{Insertion}: after $k$ passes, \textbf{first $k{+}1$} elements are sorted (relative order correct, positions may shift later)
+  \item \kw{Quick} (1 pass): pivot is in its \textbf{final} position; left subarray $\le$ pivot, right $>$ pivot — neither side sorted yet
+  \item \kw{Merge}: subarrays of size $2^k$ are sorted after $k$ levels; final merge produces sorted array
+  \item \kw{Heap} (build): after heapify, valid max-heap; each extraction places max at the end
+\end{itemize}
+
+\vspace{2pt}
+\subsection{Algorithm Sketches}
+\textbf{Quick sort} — pivot = arr[0]. Move \texttt{up} ptr right until $>$ pivot; move \texttt{down} ptr left until $\le$ pivot; swap. When \texttt{down} crosses \texttt{up}, swap pivot with \texttt{arr[down]}.
+
+\textbf{Merge sort} — split $\to$ recurse left \& right $\to$ merge two sorted halves into temp array $\to$ copy back.
+
+\textbf{Heap sort} — build max-heap \On{n}, then repeatedly swap root with last unsorted element and heapify \On{\log n}. Total: \On{n\log n}.
+
+%% ─────────────────────────────────────────
+\section{SETS, MAPS \& HASHING}
+
+\subsection{Set vs Map}
+\begin{itemize}
+  \item \kw{set} — unique elements only; no index access
+  \item \kw{map} — unique \textit{key}/value pairs; \texttt{map[k]=v} overwrites
+  \item \texttt{std::set/map} $\Rightarrow$ BST, \On{\log n}
+  \item \texttt{std::unordered\_set/map} $\Rightarrow$ hash table, \On{1} avg
+\end{itemize}
+
+\subsection{Key Operations}
+\texttt{insert}, \texttt{erase}, \texttt{find} (returns iterator or \texttt{end()}), \texttt{count} (0 or 1), \texttt{size}, \texttt{empty}\\
+Unordered extras: \texttt{bucket\_count()}, \texttt{load\_factor()}
+
+\subsection{Hash Tables}
+\textbf{Load factor} $\lambda = \frac{\text{\# elements}}{\text{\# buckets}}$\\
+Rehash when $\lambda$ too large (slow chaining/clustering).
+
+\textbf{Good hash}: deterministic, fast, uniform distribution, minimizes collisions.
+
+\subsection{Collision Resolution}
+\begin{enumerate}
+  \item \kw{Separate Chaining} — each bucket is a linked list; collision appended to list
+  \item \kw{Linear Probing} — collision: probe \textbf{+1} bucket at a time until empty slot found
+  \item \kw{Quadratic Probing} — collision: probe offsets $1^2, 2^2, 3^2, \ldots$ (i.e.\ $+1, +4, +9, \ldots$)
+\end{enumerate}
+
+\textbf{Probing example} (table size 7, hash = key \% 7):\\
+Insert 10 (slot 3), insert 17 (slot 3 $\to$ \textbf{Linear}: try 4; \textbf{Quad}: try $3{+}1{=}4$)
+
+%% ─────────────────────────────────────────
+\section{GRAPHS \& TRAVERSALS}
+
+\subsection{Terminology}
+\begin{itemize}
+  \item \kw{Adjacent}: $B$ is adjacent to $A$ iff edge $A \to B$ exists (directed: one-way!)
+  \item The \textit{adjacency set of A} contains $B$; $B$'s does \textbf{not} contain $A$ (unless separate edge)
+  \item \kw{Path}: sequence of adjacent vertices
+  \item \kw{Simple path}: no repeated vertices (first = last $\Rightarrow$ cycle)
+  \item \kw{Cycle}: simple path where first = last vertex
+  \item \kw{In-degree}: edges \textit{into} a vertex; \kw{Out-degree}: edges \textit{out of}
+  \item \kw{Dense}: $|E| \approx |V|^2$; \quad \kw{Sparse}: $|E| \approx |V|$
+  \item \kw{Simple Graph}: \textbf{no self-loops} and \textbf{no parallel edges} (at most one edge from any vertex $u$ to any vertex $v$)
+\end{itemize}
+
+\subsection{Graph Types}
+\textbf{Directed/Undirected} (arrow direction matters) \quad
+\textbf{Weighted/Unweighted} \quad
+\textbf{Connected/Disconnected} \quad
+\textbf{Cyclic/Acyclic}
+
+Real examples: Facebook $\to$ undirected unweighted; Web $\to$ directed; Flights $\to$ directed weighted cyclic
+
+\subsection{Representations}
+
+{\footnotesize
+\begin{tabular}{@{}l c c c@{}}
+\tblhd{Impl.} & \tblhd{Connectedness} & \tblhd{Adjacency} & \tblhd{Space}\\
+\midrule
+Edge List     & \On{E} & \On{E} & \On{E}\\
+\rowcolor{rowalt}
+Adj.\ Matrix  & \On{1} & \On{V} & \On{V^2}\\
+Adj.\ List    & \On{V} & \On{V} & \On{V+E}\\
+\end{tabular}
+}
+\vspace{2pt}
+
+\begin{itemize}
+  \item \kw{Adj.\ Matrix}: \texttt{graph[from][to]=weight}; best for dense graphs
+  \item \kw{Adj.\ List}: \texttt{map<from, vector<pair<to,wt>{>}>}; best for sparse
+\end{itemize}
+
+\subsection{BFS \& DFS}
+\textbf{BFS (queue)} — enqueue start; while queue non-empty: dequeue $u$, enqueue all unvisited neighbors of $u$.\\
+\textit{Use case}: shortest path on \textbf{unweighted} graph only. \textcolor{red}{\textbf{Does NOT work for weighted graphs}} — use Dijkstra's instead. Output (ex): A, B, C, D, E, F
+
+\textbf{DFS (stack)} — push start; while stack non-empty: peek $u$; if $u$ has unvisited neighbor $v$, push $v$; else pop $u$.\\
+\textit{Use case}: topological sort, cycle detection. Output (ex): A, B, D, C, E, F
+
+\textbf{S-T Path} — run BFS/DFS from $s$; return true if $t$ visited.
+
+\vspace{2pt}
+\subsection{BFS \& DFS Complexities}
+{\footnotesize
+\begin{tabular}{@{}l c c@{}}
+\tblhd{} & \tblhd{Time} & \tblhd{Space}\\
+\midrule
+BFS (iterative)      & \On{V+E} & \On{V}\\
+\rowcolor{rowalt}
+DFS (iterative)      & \On{V+E} & \On{V}\\
+DFS (recursive)      & \On{V+E} & \On{V}\\
+\end{tabular}
+}
+\vspace{1pt}
+
+Time \On{V+E}: visit every vertex once (\On{V}) + traverse every edge once (\On{E}).\\
+Space \On{V}: queue/stack/call-stack holds at most $V$ vertices.\\
+\textit{Note}: recursive DFS space = \On{V} call-stack frames in worst case (a path graph); iterative DFS uses explicit stack of same size. Both implementations identical in complexity.
+
+%% ─────────────────────────────────────────
+\section{GRAPH ALGORITHMS}
+
+\subsection{Dijkstra's (Shortest Weighted Path)}
+\textbf{Input}: directed graph, non-negative weights, source $s$\\
+\textbf{Output}: shortest distance from $s$ to every vertex\\
+\textbf{Complexity}: \On{V\log V + E\log V}\\
+\textbf{Greedy} — always correct if all weights $\ge 0$
+
+\textbf{Steps}:
+\begin{enumerate}
+  \item Init: \texttt{dist[s]=0}, \texttt{dist[v]=$\infty$}, \texttt{pred[v]=null}, \textit{Done}$=\emptyset$
+  \item \textbf{Repeat} until \textit{NotDone} empty:
+  \begin{itemize}
+    \item Pick $v$ = min \texttt{dist} not in \textit{Done}
+    \item Add $v$ to \textit{Done}
+    \item \textbf{Relax} all edges from $v$:\\
+    \texttt{if dist[to] > dist[v] + w:}\\
+    \quad\texttt{dist[to] = dist[v] + w; pred[to] = v}
+  \end{itemize}
+\end{enumerate}
+\textbf{Reading result}: trace \texttt{pred[]} backwards from destination\\
+Edge weight $D\!\to\!C$ = \texttt{dist[C]} $-$ \texttt{dist[D]} (when $D$ immediately precedes $C$)
+
+\subsection{Minimum Spanning Trees}
+\textbf{Spanning tree}: subset of edges connecting all $V$ vertices with no cycles. Has $V{-}1$ edges. \textbf{MST}: spanning tree with minimum total edge weight.
+
+\textbf{Prim's Algorithm}:
+\begin{enumerate}
+  \item Start with any vertex in set $S$
+  \item Repeatedly: find min-weight edge crossing the \textit{cut} ($S$ vs $V{-}S$), add its endpoint to $S$
+  \item Until $V{-}S$ is empty
+\end{enumerate}
+\textit{Cut property}: the lightest edge crossing any cut is always safe to add.
+
+\textbf{Kruskal's Algorithm}:
+\begin{enumerate}
+  \item Sort all edges by weight (ascending)
+  \item For each edge: add to MST if it does \textbf{not} create a cycle
+  \item Use \textbf{Disjoint Set / Union-Find} to detect cycles efficiently:
+  \begin{itemize}
+    \item \texttt{find(x)}: returns root of $x$'s component
+    \item \texttt{union(x,y)}: merge components of $x$ and $y$
+    \item Cycle detected if \texttt{find(u) == find(v)} before adding edge $u{-}v$
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Topological Sort}
+\textbf{Applies to}: DAGs (directed acyclic graphs) only.\\
+\textbf{Definition}: ordering where if edge $V_i \to V_j$ exists, then $V_i$ comes before $V_j$.
+
+\textbf{Steps} (Kahn's / BFS-based):
+\begin{enumerate}
+  \item Compute in-degree of every vertex
+  \item Enqueue all vertices with in-degree = 0
+  \item While queue non-empty:\\
+    \quad Dequeue $v$, output $v$\\
+    \quad For each neighbor $u$ of $v$: decrement in-degree[$u$]\\
+    \quad If in-degree[$u$] = 0, enqueue $u$
+\end{enumerate}
+
+%% ─────────────────────────────────────────
+\section{GREEDY ALGORITHMS}
+
+\subsection{Huffman Coding}
+\textbf{Goal}: lossless compression — assign shorter codes to more frequent characters.\\
+\textbf{Property}: prefix-free (no code is a prefix of another).
+
+\textbf{Build Huffman Tree}:
+\begin{enumerate}
+  \item Create a leaf node for each symbol with its frequency
+  \item Insert all nodes into a \textbf{min-heap} (priority queue by frequency)
+  \item While heap has $> 1$ node:
+  \begin{itemize}
+    \item Extract two minimum nodes $L$ and $R$
+    \item Create internal node with freq $= f(L) + f(R)$; $L$ = left child, $R$ = right child
+    \item Insert new node back into heap
+  \end{itemize}
+  \item Remaining node = root of Huffman tree
+\end{enumerate}
+\textbf{Assign codes}: left edge = \texttt{0}, right edge = \texttt{1}; code for symbol = path from root to leaf.
+
+\textbf{Example}:
+\begin{tabular}{@{}ccc@{}}
+\tblhd{Char} & \tblhd{Freq} & \tblhd{Code}\\
+\midrule
+A & 5 & 0\\
+B & 2 & 100\\
+C & 1 & 101\\
+D & 3 & 11\\
+\end{tabular}
+
+\textbf{Encoded size} = $\sum (\text{freq} \times \text{code length})$\\
+\textbf{vs.}\ fixed-width: $n$ symbols needs $\lceil \log_2 n \rceil$ bits each.
+
+\subsection{Coin Change (Greedy)}
+Always pick the largest denomination that fits the remaining amount.\\
+\textit{Only optimal for canonical coin systems} (e.g., US coins). Fails for arbitrary denominations.
+
+\subsection{Bin Packing}
+Pack items of sizes $\le 1$ into bins of capacity 1.
+\begin{itemize}
+  \item \kw{First Fit}: place in first bin with room
+  \item \kw{Best Fit}: place in bin with least remaining space (still fits)
+  \item \kw{First Fit Decreasing (FFD)}: sort items descending, then First Fit — best approximation
+\end{itemize}
+
+\subsection{Number Conversions}
+\textbf{Decimal $\to$ Binary}: repeatedly divide by 2, record remainders bottom-up.\\
+\textbf{Binary $\to$ Decimal}: $\sum b_i \times 2^i$ (right to left, 0-indexed).\\
+\textbf{Decimal $\to$ Hex}: divide by 16; \textbf{Hex $\to$ Bin}: each hex digit = 4 bits.
+
+\end{multicols}
+\end{document}
